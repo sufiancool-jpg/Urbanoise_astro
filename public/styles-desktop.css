@@ -1,0 +1,40 @@
+/* Desktop overrides (1441px–1920px). */
+
+.site-header {
+  left: 2.6rem;
+  right: 2.6rem;
+}
+
+.site-brand {
+  font-size: 1.35rem;
+}
+
+.nav-link {
+  font-size: 0.82rem;
+}
+
+.about-split {
+  grid-template-columns: 1fr 1fr;
+}
+
+.about-photo-stack .about-photo-slot:nth-of-type(4) {
+  display: none;
+}
+
+.about-title {
+  font-size: clamp(2.5rem, 3.5vw, 4.2rem);
+}
+
+.about-lead {
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+}
+
+.about-paragraph {
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
+}
+
+.about-variant-button {
+  font-size: 0.7rem;
+  padding: 0.4rem 0.75rem;
+  min-width: clamp(5rem, 8vw, 6.5rem);
+}

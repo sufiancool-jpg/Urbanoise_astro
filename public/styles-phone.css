@@ -1,0 +1,214 @@
+/* Phone overrides (max-width: 480px). */
+
+.site-header {
+  top: 1.25rem;
+  left: 1.25rem;
+  right: 1.25rem;
+}
+
+.site-brand {
+  font-size: 1.1rem;
+}
+
+.nav-links {
+  gap: 1.25rem;
+}
+
+.nav-link {
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+}
+
+.nav-links {
+  display: none;
+}
+
+.about-slide-image {
+  display: none;
+}
+
+.enter-cta {
+  bottom: 2.2rem;
+}
+
+.cursor-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.cta-text {
+  font-size: 0.68rem;
+}
+
+.scroll-bumper {
+  bottom: 1.35rem;
+  min-width: 210px;
+  height: 50px;
+  font-size: 0.7rem;
+}
+
+.about-split {
+  grid-template-columns: 1fr 1fr;
+}
+
+.about-left {
+  min-height: auto;
+  padding: 3rem 1.75rem 2.25rem;
+}
+
+.about-right {
+  min-height: 55vh;
+}
+
+.about-we {
+  font-size: 2.65rem;
+}
+
+.about-name {
+  font-size: 2.55rem;
+}
+
+.about-statement {
+  margin-top: 2.4rem;
+  font-size: clamp(1.65rem, 6vw, 2.2rem);
+  max-width: 22ch;
+}
+
+.about-blurb {
+  max-width: 48ch;
+  font-size: 0.82rem;
+}
+
+.about-page {
+  padding-top: 1rem;
+}
+
+.about-grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-viewport {
+  order: 0;
+}
+
+.about-actions {
+  order: -1;
+  bottom: auto;
+}
+
+.about-page,
+.about-viewport,
+.about-slide-track,
+.about-slide {
+  min-height: auto;
+  height: auto;
+}
+
+.about-slide {
+  display: block;
+}
+
+main {
+  scroll-snap-type: none;
+  scroll-padding-top: 0;
+}
+
+.about-actions {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 1rem 1.25rem 0.5rem;
+  display: flex;
+  justify-content: center;
+  background: var(--pantone-8245c);
+  z-index: 2;
+}
+
+.about-controls {
+  display: none;
+}
+
+.about-phone-controls {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.about-phone-nav {
+  border: 1px solid rgba(11, 11, 11, 0.35);
+  padding: 0.65rem 0.75rem;
+  background: transparent;
+  color: #0b0b0b;
+  font-family: var(--font-head);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.about-phone-nav:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+.about-phone-label {
+  flex: 1;
+  text-align: center;
+  letter-spacing: 0.4em;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-family: var(--font-head);
+  color: #0b0b0b;
+}
+
+main {
+  scroll-padding-top: 1rem;
+}
+.logo {
+  font-size: 72px;
+}
+
+.logo-wrap {
+  max-width: 220px;
+}
+
+.footer-newsletter {
+  width: 100%;
+  max-width: 100%;
+}
+
+.footer-newsletter-field {
+  border-radius: 999px;
+  padding: 0;
+}
+
+.footer-newsletter-field input {
+  padding: 0.55rem 1rem;
+  font-size: 0.9rem;
+}
+
+.footer-newsletter-field button {
+  padding: 0 1rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+}
+
+.footer-page {
+  min-height: auto;
+  padding: clamp(1.5rem, 3vw, 2.25rem) 1rem;
+}
+
+.footer-inner {
+  padding: 0;
+  gap: 1rem;
+  place-items: stretch;
+}
+
+.footer-meta {
+  flex-direction: column;
+  align-items: stretch;
+}

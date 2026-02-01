@@ -1,0 +1,14 @@
+/* Laptop overrides (1025px–1440px). */
+
+.site-header {
+  left: 2.1rem;
+  right: 2.1rem;
+}
+
+.about-left {
+  padding: 4rem 3.2rem 3rem;
+}
+
+.about-split {
+  grid-template-columns: 1fr 1fr;
+}

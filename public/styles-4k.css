@@ -1,0 +1,76 @@
+/* 4K overrides (1921px+). */
+
+.site-header {
+  top: 2.4rem;
+  left: 3.4rem;
+  right: 3.4rem;
+}
+
+.site-brand {
+  font-size: 1.75rem;
+}
+
+.nav-link {
+  font-size: 0.95rem;
+}
+
+.enter-cta {
+  bottom: 3.8rem;
+}
+
+.scroll-bumper {
+  bottom: 2.6rem;
+  min-width: 300px;
+  height: 62px;
+  font-size: 0.9rem;
+}
+
+.about-left {
+  padding: 5.5rem 5.2rem 4.2rem;
+}
+
+.about-we {
+  font-size: 4.6rem;
+}
+
+.about-name {
+  font-size: 4.5rem;
+}
+
+.about-statement {
+  font-size: clamp(2.6rem, 2.6vw, 4.1rem);
+}
+
+.about-slide-text {
+  padding: clamp(4.5rem, 5vw, 6rem) clamp(4rem, 5vw, 5.5rem) clamp(5.5rem, 6vh, 7rem) clamp(3rem, 4vw, 4.5rem);
+}
+
+.about-title {
+  font-size: clamp(3.6rem, 5.28vw, 6rem);
+}
+
+.about-lead {
+  font-size: clamp(1.68rem, 3.36vw, 2.16rem);
+}
+
+.about-paragraph {
+  font-size: clamp(1.2rem, 2.64vw, 1.44rem);
+}
+
+.about-controls {
+  gap: clamp(0.8rem, 1.2vw, 1.5rem);
+}
+
+.about-variant-button {
+  font-size: 0.9rem;
+  padding: 0.75rem 1rem;
+  min-width: clamp(6rem, 8vw, 9rem);
+}
+
+.about-photo-stack {
+  gap: 0;
+}
+
+.about-photo-stack .about-photo-slot:nth-of-type(4) {
+  display: none;
+}
