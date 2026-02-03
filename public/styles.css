@@ -139,6 +139,25 @@ body.at-mockup .site-brand {
   transition: background 0.25s ease;
 }
 
+.nav-language {
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: transparent;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.78rem;
+  font-family: var(--font-head);
+  font-weight: 500;
+  padding: 0.45rem 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.nav-language:hover,
+.nav-language:focus-visible {
+  background: rgba(255, 255, 255, 0.1);
+}
+
 .nav-link:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 6px;

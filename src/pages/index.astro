@@ -22,39 +22,47 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/styles.css" />
-    <link rel="stylesheet" href="/styles-phone.css" media="(max-width: 480px)" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles-phone.css" media="(max-width: 480px)" />
     <link
       rel="stylesheet"
-      href="/styles-phone-lg.css"
+      href="./styles-phone-lg.css"
       media="(min-width: 481px) and (max-width: 768px)"
     />
     <link
       rel="stylesheet"
-      href="/styles-tablet.css"
+      href="./styles-tablet.css"
       media="(min-width: 769px) and (max-width: 1024px)"
     />
     <link
       rel="stylesheet"
-      href="/styles-laptop.css"
+      href="./styles-laptop.css"
       media="(min-width: 1025px) and (max-width: 1440px)"
     />
     <link
       rel="stylesheet"
-      href="/styles-13inch.css"
+      href="./styles-13inch.css"
       media="(width: 1440px) and (min-height: 699px) and (max-height: 730px)"
     />
     <link
       rel="stylesheet"
-      href="/styles-desktop.css"
+      href="./styles-desktop.css"
       media="(min-width: 1441px) and (max-width: 1920px)"
     />
-    <link rel="stylesheet" href="/styles-4k.css" media="(min-width: 1921px)" />
+    <link rel="stylesheet" href="./styles-4k.css" media="(min-width: 1921px)" />
   </head>
   <body>
     <header class="site-header" aria-label="Primary">
       <div class="site-brand">Urbanoise</div>
       <nav class="nav-links">
+        <button
+          class="nav-language"
+          type="button"
+          aria-pressed="false"
+          aria-label="Switch language, currently English"
+        >
+          EN
+        </button>
         <a class="nav-link" href="mailto:info@urbanoise.com">Start a project</a>
         <a class="nav-link" href="#about">About us</a>
       </nav>
@@ -220,6 +228,36 @@
       </section>
     </main>
 
-    <script type="module" src="/main.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const button = document.querySelector(".nav-language");
+        if (!button) return;
+        const languages = [
+          { code: "en", label: "EN", name: "English" },
+          { code: "de", label: "DE", name: "Deutsch" },
+        ];
+        let currentIndex = 0;
+
+        const updateButton = (index) => {
+          const lang = languages[index];
+          button.textContent = lang.label;
+          button.dataset.language = lang.code;
+          button.setAttribute(
+            "aria-label",
+            `Switch language, currently ${lang.name}`
+          );
+          button.setAttribute("aria-pressed", lang.code === "de" ? "true" : "false");
+        };
+
+        updateButton(currentIndex);
+
+        button.addEventListener("click", () => {
+          currentIndex = (currentIndex + 1) % languages.length;
+          updateButton(currentIndex);
+          // add translation hook here if needed
+        });
+      });
+    </script>
+    <script type="module" src="./main.js"></script>
   </body>
 </html>
