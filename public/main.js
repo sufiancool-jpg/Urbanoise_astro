@@ -34,6 +34,7 @@ const aboutSection = document.querySelector("#about");
 const aboutLink = document.querySelector('a[href="#about"]');
 const footerBackLink = document.querySelector('a[href="#stage"]');
 const mockupSection = document.querySelector("#mockup");
+const articlesSection = document.querySelector(".articles-section");
 
 const LOCK_CLASS = "scroll-locked";
 const ENTERED_CLASS = "is-entered";
@@ -140,6 +141,30 @@ const initMockupObserver = () => {
     }
   );
   mockupObserver.observe(mockupSection);
+};
+
+let articlesObserver = null;
+const setAtArticles = (on) => {
+  body?.classList.toggle("at-articles", Boolean(on));
+};
+
+const initArticlesObserver = () => {
+  if (!articlesSection || !("IntersectionObserver" in window)) return;
+  articlesObserver?.disconnect();
+  articlesObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.target !== articlesSection) return;
+        setAtArticles(entry.isIntersecting);
+      });
+    },
+    {
+      root: null,
+      rootMargin: "-45% 0px -45% 0px",
+      threshold: 0.01,
+    }
+  );
+  articlesObserver.observe(articlesSection);
 };
 
 const hideBumperNow = () => {
@@ -525,6 +550,7 @@ if (video && fallback) {
 ensureFontsReady().then(() => computeLogoTarget());
 initAboutObserver();
 initMockupObserver();
+initArticlesObserver();
 
 // Logo intro + CTA reveal
 const queueLogoIntro = () => {
@@ -599,8 +625,8 @@ const aboutBaseVariant = {
 const visionPhotos = Array.from({ length: 11 }, (_, index) => `Photos/about/${index + 1}.jpg`);
 
 const aboutVisionVariant = {
-  title: 'We make <span class="about-title-brand">Films.</span>',
-  lead: "We make Films.",
+  title: 'We make <span class="about-title-brand">Films</span>.',
+  lead: "We believe that moving images hold a great potential to make architecture truly tangible.",
   paragraphs: [
     "We work closely with our partners to capture and articulate the full picture behind a project — the approach, methods, and systems that shape a structure.",
     "In dialogue with architects and design studios, we highlight the defining features of a design through considered cinematography, framing, and movement, while also taking into account the sonic qualities of space and material.",
@@ -649,7 +675,7 @@ const aboutVisionVariant = {
 const aboutPhotographyVariant = {
   primaryTitle: 'We make <span class="about-title-highlight">Photographs</span>.',
   lead:
-    "Photography complements our <span class=\"about-highlight\">films where concentration, precision and reduction are required.</span>",
+    "Photography complements our films where <span class=\"about-highlight\">concentration, precision</span> and<span class=\"about-highlight\"> reduction</span> are required.",
   paragraphs: [
     "Photography complements our films where concentration, precision, and reduction are required.",
     "It allows us to isolate space, material, and detail — moments where stillness reveals structure more clearly than movement.",
@@ -659,15 +685,27 @@ const aboutPhotographyVariant = {
   alt: "Urbanoise founders portrait",
   photoCarousel: {
     images: [
-      "Photos/Architektur_1.jpg",
-      "Photos/Architektur_2.jpg",
-      "Photos/Architektur_3.jpg",
-      "Photos/Architektur_4.jpg",
-      "Photos/Architektur_5.jpg",
-      "Photos/Architektur_6.jpg",
-      "Photos/Architektur_7.jpg",
-      "Photos/Architektur_8.jpg",
-      "Photos/Architektur_9.jpg",
+      "Photos/slide/1.jpg",
+      "Photos/slide/Architektur_Hausderseele-05.jpg",
+      "Photos/slide/Architektur_Hausderseele-15.jpg",
+      "Photos/slide/Architektur_Hausderseele-17.jpg",
+      "Photos/slide/Architektur_Hausderseele-24.jpg",
+      "Photos/slide/Architektur_MIX-11 2.jpg",
+      "Photos/slide/Architektur_MIX-11.jpg",
+      "Photos/slide/Architektur_MIX-12.jpg",
+      "Photos/slide/Architektur_MIX-14.jpg",
+      "Photos/slide/Architektur_MIX-16.jpg",
+      "Photos/slide/Architektur_Neues Theater-02.jpg",
+      "Photos/slide/Architektur_Neues Theater-06.jpg",
+      "Photos/slide/Architektur_Neues Theater-08.jpg",
+      "Photos/slide/Architektur_Neues Theater-09.jpg",
+      "Photos/slide/Architektur_Neues Theater-Tryptichon.jpg",
+      "Photos/slide/Architektur_Sanaa-3.jpg",
+      "Photos/slide/Architektur_Sanaa-4.jpg",
+      "Photos/slide/Architektur_Stealthbomber-07.jpg",
+      "Photos/slide/Hasselburg-1.jpg",
+      "Photos/slide/Hasselburg-2.jpg",
+      "Photos/slide/Hasselburg-3.jpg",
     ],
     interval: 16000,
     duration: 0.6,
@@ -683,7 +721,7 @@ const aboutPhotographyVariant = {
 };
 
 const aboutConsultationsVariant = {
-  primaryTitle: 'We make <span class="about-title-highlight">campaigns.</span>',
+  primaryTitle: 'We make <span class="about-title-highlight">campaigns</span>.',
   lead:
     "We work with partners to define clear media strategies rooted in purpose rather than noise.",
   paragraphs: [
@@ -731,10 +769,10 @@ const aboutConsultationsVariant = {
 };
 
 const aboutVariants = [
-  { key: "vision", ...aboutVisionVariant },
-  { key: "practice", ...aboutPhotographyVariant },
-  { key: "process", ...aboutConsultationsVariant },
-  ...["culture"].map((key) => ({ key, ...aboutBaseVariant })),
+  { key: "films", ...aboutVisionVariant },
+  { key: "photography", ...aboutPhotographyVariant },
+  { key: "consultations", ...aboutConsultationsVariant },
+  ...["about"].map((key) => ({ key, ...aboutBaseVariant })),
 ];
 
 const updateVariantButtons = (activeKey) => {
@@ -1002,10 +1040,17 @@ if (aboutSlideTrack) {
   initPhotoSlotRotations();
   initPhotoCarousels();
 }
+const getVariantIndexByKey = (key) =>
+  aboutVariants.findIndex((variant) => variant.key === key);
+
 if (aboutVariantButtons.length) {
   aboutVariantButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      setAboutVariant(aboutActiveIndex + 1);
+      const key = button.dataset.variant;
+      const index = getVariantIndexByKey(key);
+      if (index >= 0) {
+        setAboutVariant(index);
+      }
     });
   });
 }

@@ -1,3 +1,85 @@
+---
+const postsEndpoint =
+  "https://urbanoise.com/wpheadless/wp-json/wp/v2/posts?per_page=3&_embed";
+let fetchedPosts = [];
+try {
+  const response = await fetch(postsEndpoint);
+  if (response.ok) {
+    const posts = await response.json();
+    if (Array.isArray(posts)) {
+      fetchedPosts = posts;
+    }
+  }
+} catch (error) {
+  console.error("Unable to fetch WordPress posts:", error);
+}
+
+const stripHtml = (value) => (value ? value.replace(/<[^>]+>/g, "").trim() : "");
+const clampText = (value, max = 70) =>
+  value && value.length > max ? `${value.slice(0, max).trimEnd()}...` : value;
+
+const normalizedPosts = fetchedPosts.map((post) => {
+  const rawTitle = post.title?.rendered ?? "Untitled";
+  const rawExcerpt = post.excerpt?.rendered ?? "";
+  const title = stripHtml(rawTitle) || "Untitled";
+  const excerptSource =
+    stripHtml(rawExcerpt) ||
+    (stripHtml(post.content?.rendered)?.slice(0, 140) || "Short summary coming soon.");
+  const excerpt = clampText(excerptSource, 70);
+  const link = post.link ?? "#";
+  let image = "";
+  const embedded = post._embedded?.["wp:featuredmedia"];
+  if (Array.isArray(embedded)) {
+    const media = embedded[0];
+    if (media?.source_url) {
+      image = media.source_url;
+    }
+  }
+  let categoryName = "Blog";
+  const terms = post._embedded?.["wp:term"];
+  if (Array.isArray(terms) && terms[0]?.length) {
+    categoryName = terms[0][0]?.name ?? categoryName;
+  }
+  return { title, excerpt, link, image, categoryName };
+});
+
+const fallbackArticles = [
+  {
+    title: "Frame the Moment",
+    excerpt:
+      "A short note on how we compose lighting tests and time the camera for the perfect architectural still.",
+    link: "#about",
+    image: "Photos/work1.jpg",
+    categoryName: "Photoplay",
+  },
+  {
+    title: "Architectural Notes",
+    excerpt:
+      "Sketches, sound cues, and the feeling of materiality that eventually become the visual narrative.",
+    link: "#mockup",
+    image: "Photos/work2.jpg",
+    categoryName: "Notes",
+  },
+  {
+    title: "City in Motion",
+    excerpt:
+      "Documenting the structural rhythm of the places we inhabit — slow pans, wide lenses, honest light.",
+    link: "#contact",
+    image: "Photos/work3.jpg",
+    categoryName: "Journal",
+  },
+  {
+    title: "Studio Dispatch",
+    excerpt:
+      "Updates from the Urbanoise studio and the experiments that lead into every new film and photograph.",
+    link: "#stage",
+    image: "Photos/us2.JPG",
+    categoryName: "Studio",
+  },
+];
+
+const articles = (normalizedPosts.length ? normalizedPosts : fallbackArticles).slice(0, 3);
+---
 <!doctype html>
 <html lang="en">
   <head>
@@ -55,14 +137,6 @@
     <header class="site-header" aria-label="Primary">
       <div class="site-brand">Urbanoise</div>
       <nav class="nav-links">
-        <button
-          class="nav-language"
-          type="button"
-          aria-pressed="false"
-          aria-label="Switch language, currently English"
-        >
-          EN
-        </button>
         <a class="nav-link" href="mailto:info@urbanoise.com">Start a project</a>
         <a class="nav-link" href="#about">About us</a>
       </nav>
@@ -129,18 +203,18 @@
               <button
                 type="button"
                 class="about-variant-button is-active"
-                data-variant="vision"
+                data-variant="films"
                 aria-pressed="true"
               >
                 FILMS
               </button>
-              <button type="button" class="about-variant-button" data-variant="practice" aria-pressed="false">
+              <button type="button" class="about-variant-button" data-variant="photography" aria-pressed="false">
                 Photography
               </button>
-              <button type="button" class="about-variant-button" data-variant="process" aria-pressed="false">
+              <button type="button" class="about-variant-button" data-variant="consultations" aria-pressed="false">
                 Consultations
               </button>
-              <button type="button" class="about-variant-button" data-variant="culture" aria-pressed="false">
+              <button type="button" class="about-variant-button" data-variant="about" aria-pressed="false">
                 About us
               </button>
             </div>
@@ -149,39 +223,34 @@
       </section>
 
       <section class="mockup-page" id="mockup" aria-label="Mockup showcase">
-        <div class="mockup-inner">
-          <div class="mockup-header">
-            <p class="mockup-eyebrow">Work in focus</p>
-            <h2 class="mockup-title">Prototypes in photos and writing</h2>
-            <p class="mockup-lead">
-              A studio of films needs touchpoints that show process, sketches, and experiences. Below are quick references to ongoing glimpses and notes we revisit while preparing final edits.
-            </p>
+        <div class="mockup-inner articles-inner">
+          <div class="articles-heading">
+            <p>Work in focus</p>
+            <h2>Articles</h2>
           </div>
-          <div class="mockup-grid">
-            <article class="mockup-card">
-              <div class="mockup-photo" style="background-image: url('Photos/work1.jpg');"></div>
-              <div class="mockup-copy">
-                <p class="mockup-meta">Photoplay</p>
-                <h3>Spatial Portraits</h3>
-                <p>The practice of framing architecture through small film loops, lighting tests, and score drafts.</p>
-              </div>
-            </article>
-            <article class="mockup-card">
-              <div class="mockup-photo" style="background-image: url('Photos/about/1.jpg');"></div>
-              <div class="mockup-copy">
-                <p class="mockup-meta">Notes</p>
-                <h3>Dialogue With Architects</h3>
-                <p>Field observations and sketches serve as a base for selecting the frames we emphasize in the final film.</p>
-              </div>
-            </article>
-            <article class="mockup-card">
-              <div class="mockup-photo" style="background-image: url('Photos/work2.jpg');"></div>
-              <div class="mockup-copy">
-                <p class="mockup-meta">Journal</p>
-                <h3>Silent Sequence</h3>
-                <p>Early edits and audio experiments shape the rhythm before the final sound mix is locked.</p>
-              </div>
-            </article>
+          <div class="articles-grid">
+            {articles.map((article) => (
+              <article class="article-card">
+                <a
+                  class="article-thumb-link"
+                  href={article.link}
+                  aria-label={`Open article: ${article.title || "Untitled"}`}
+                >
+                  {article.image ? (
+                    <figure class="article-thumb">
+                      <img src={article.image} alt={`Thumbnail for ${article.title}`} loading="lazy" />
+                    </figure>
+                  ) : null}
+                </a>
+                <div class="article-card-body">
+                  <p class="article-label">{article.categoryName ?? "Blog"}</p>
+                  <h3>{article.title || "Untitled"}</h3>
+                  <p class="article-card-excerpt">
+                    {clampText(article.excerpt || "Short summary coming soon.", 70)}
+                  </p>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </section>
@@ -228,36 +297,123 @@
       </section>
     </main>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const button = document.querySelector(".nav-language");
-        if (!button) return;
-        const languages = [
-          { code: "en", label: "EN", name: "English" },
-          { code: "de", label: "DE", name: "Deutsch" },
-        ];
-        let currentIndex = 0;
-
-        const updateButton = (index) => {
-          const lang = languages[index];
-          button.textContent = lang.label;
-          button.dataset.language = lang.code;
-          button.setAttribute(
-            "aria-label",
-            `Switch language, currently ${lang.name}`
-          );
-          button.setAttribute("aria-pressed", lang.code === "de" ? "true" : "false");
-        };
-
-        updateButton(currentIndex);
-
-        button.addEventListener("click", () => {
-          currentIndex = (currentIndex + 1) % languages.length;
-          updateButton(currentIndex);
-          // add translation hook here if needed
-        });
-      });
-    </script>
+    <style>
+      .mockup-page {
+        background: #0b0b0b;
+      }
+      .mockup-inner.articles-inner {
+        --articles-gap: clamp(0.7rem, 1.3vw, 1.2rem);
+        padding: clamp(3rem, 5vw, 4.5rem) var(--articles-gap);
+      }
+      .articles-inner {
+        max-width: none;
+        width: 100%;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: clamp(2rem, 3vw, 2.5rem);
+      }
+      .articles-heading {
+        grid-column: 1 / -1;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.4em;
+        margin-bottom: 0;
+      }
+      .articles-heading h2 {
+        margin: 0.8rem 0 0.2rem;
+        font-size: clamp(2.5rem, 3vw, 3.5rem);
+        line-height: 1.2;
+        letter-spacing: 0.02em;
+        font-family: var(--font-head);
+      }
+      .articles-heading p {
+        margin: 0;
+        max-width: 36ch;
+        font-size: 1rem;
+        line-height: 1.5;
+      }
+      .articles-grid {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: var(--articles-gap);
+        width: 100%;
+      }
+      .article-card {
+        background: #0b0b0b;
+        border-radius: 20px;
+        overflow: visible;
+        box-shadow: 0 30px 50px rgba(0, 0, 0, 0.45);
+        transition: transform 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        aspect-ratio: auto;
+        position: relative;
+        border: 0;
+        padding: clamp(0.45rem, 0.8vw, 0.65rem);
+      }
+      .article-card:hover {
+        transform: translateY(-10px);
+      }
+      .article-thumb {
+        aspect-ratio: 16 / 9;
+        height: auto;
+        width: 100%;
+        overflow: hidden;
+        margin: 0;
+        border-radius: 14px;
+      }
+      .article-thumb-link {
+        display: block;
+        width: 100%;
+      }
+      .article-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 20%;
+        display: block;
+      }
+      .article-card-body {
+        padding: clamp(0.65rem, 1vw, 0.9rem) clamp(0.2rem, 0.5vw, 0.35rem) 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        justify-content: flex-start;
+        color: #f3f3f3;
+      }
+      .article-label {
+        font-size: 0.58rem;
+        letter-spacing: 0.4em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.6);
+        margin: 0;
+        font-weight: 600;
+      }
+      .article-card h3 {
+        margin: 0;
+        font-size: clamp(0.88rem, 1.25vw, 1.05rem);
+        color: #ffffff;
+        line-height: 1.25;
+      }
+      .article-card-excerpt {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.82);
+        line-height: 1.4;
+        font-size: clamp(0.72rem, 0.95vw, 0.82rem);
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      @media (max-width: 1024px) {
+        .article-card h3 {
+          font-size: 0.9rem;
+        }
+      }
+    </style>
     <script type="module" src="./main.js"></script>
   </body>
 </html>
