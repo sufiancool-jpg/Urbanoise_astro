@@ -1,0 +1,153 @@
+---
+import { cacheFeaturedImage, getWpAuthHeader } from "../../lib/wp.js";
+
+export async function getStaticPaths() {
+  const postsApiBase = "https://urbanoise.com/wpheadless/wp-json/wp/v2/posts?per_page=100&_embed";
+  const headers = getWpAuthHeader();
+  const firstResponse = await fetch(`${postsApiBase}&page=1`, { headers });
+  if (!firstResponse.ok) {
+    return [];
+  }
+  const firstPage = await firstResponse.json();
+  const totalPages = Number(firstResponse.headers.get("X-WP-TotalPages") ?? "1");
+  const allPosts = Array.isArray(firstPage) ? [...firstPage] : [];
+
+  for (let page = 2; page <= totalPages; page += 1) {
+    const response = await fetch(`${postsApiBase}&page=${page}`, { headers });
+    if (!response.ok) break;
+    const data = await response.json();
+    if (Array.isArray(data)) {
+      allPosts.push(...data);
+    }
+  }
+
+  const postsWithMedia = await Promise.all(
+    allPosts.map(async (post) => {
+      const featured = post?._embedded?.["wp:featuredmedia"]?.[0];
+      const featuredUrl = featured?.source_url ?? "";
+      const localFeaturedUrl = await cacheFeaturedImage(featuredUrl, post?.id, headers);
+      return { ...post, __localFeaturedUrl: localFeaturedUrl };
+    })
+  );
+
+  return postsWithMedia
+    .filter((post) => post?.slug)
+    .map((post) => ({
+      params: { slug: post.slug },
+      props: { post },
+    }));
+}
+
+const stripHtml = (value) => (value ? value.replace(/<[^>]+>/g, "").trim() : "");
+
+const { post } = Astro.props;
+const title = stripHtml(post?.title?.rendered ?? "Untitled");
+const clampText = (value, max = 160) =>
+  value && value.length > max ? `${value.slice(0, max).trimEnd()}...` : value;
+const descriptionSource = stripHtml(post?.excerpt?.rendered ?? post?.content?.rendered ?? "");
+const description = clampText(descriptionSource || "Urbanoise journal article.", 160);
+const content = post?.content?.rendered ?? "";
+const featured = post?._embedded?.["wp:featuredmedia"]?.[0];
+const featuredUrl = post?.__localFeaturedUrl || "";
+const featuredAlt = featured?.alt_text ?? title;
+const siteUrl = "https://urbanoise.com";
+const canonicalUrl = new URL(`/blog/${Astro.params.slug ?? ""}`, siteUrl).href;
+const ogImage = featuredUrl || `${siteUrl}/Opengraph.jpg`;
+const terms = post?._embedded?.["wp:term"];
+const categories = Array.isArray(terms) && Array.isArray(terms[0])
+  ? terms[0].map((term) => term?.name).filter(Boolean)
+  : [];
+const dateValue = post?.date ? new Date(post.date) : null;
+const formattedDate = dateValue
+  ? dateValue.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+  : "";
+const authorName = post?._embedded?.author?.[0]?.name ?? "Urbanoise";
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: title,
+  description,
+  datePublished: post?.date ?? undefined,
+  dateModified: post?.modified ?? post?.date ?? undefined,
+  author: {
+    "@type": "Organization",
+    name: authorName,
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Urbanoise",
+    url: siteUrl,
+  },
+  mainEntityOfPage: canonicalUrl,
+  image: ogImage,
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | Urbanoise</title>
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content={`${title} | Urbanoise`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="Urbanoise" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${title} | Urbanoise`} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=tanker@400&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/styles-post.css" />
+  </head>
+  <body class="post-body">
+    <header class="site-header post-header" aria-label="Primary">
+      <div class="site-brand">
+        <a class="site-brand-link" href="/">Urbanoise</a>
+      </div>
+      <nav class="nav-links">
+        <a class="nav-link" href="/#mockup">Articles</a>
+        <a class="nav-link" href="/#about">About us</a>
+      </nav>
+    </header>
+    <main class="post-page">
+      <article class="post-article">
+        <div class="post-meta">
+          {formattedDate ? <time datetime={post.date}>{formattedDate}</time> : null}
+          {categories.length ? <span>{categories.join(" · ")}</span> : null}
+        </div>
+        <h1 class="post-title">{title}</h1>
+        {featuredUrl ? (
+          <figure class="post-hero">
+            <img src={featuredUrl} alt={featuredAlt} loading="lazy" />
+          </figure>
+        ) : null}
+        <div class="post-content" set:html={content}></div>
+      </article>
+    </main>
+  </body>
+</html>

@@ -1,5 +1,8 @@
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  publicDir: 'public'
+  site: 'https://urbanoise.com',
+  publicDir: 'public',
+  integrations: [sitemap()],
 });

@@ -12,13 +12,13 @@
   font-size: clamp(1.8rem, 2.5vw, 2.6rem);
 }
 
-.about-lead {
-  font-size: clamp(0.9rem, 2vw, 1.2rem);
-}
-
-.about-paragraph {
-  font-size: clamp(0.65rem, 0.95vw, 0.85rem);
-  line-height: 1.4;
+.about-lead,
+.about-paragraph,
+.about-secondary-title,
+.about-formats-heading,
+.about-formats-list li {
+  font-size: clamp(0.8rem, 1.05vw, 1rem);
+  line-height: 1.45;
 }
 
 .about-actions {
@@ -40,4 +40,3 @@
 .about-photo-stack .about-photo-slot:nth-of-type(4) {
   display: none;
 }
-

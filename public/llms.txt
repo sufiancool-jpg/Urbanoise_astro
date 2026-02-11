@@ -1,0 +1,18 @@
+# Urbanoise
+Urbanoise is a film and photography studio focused on architectural documentaries and spatial storytelling.
+
+## Primary site
+https://urbanoise.com/
+
+## Content sources
+Blog posts are published as static pages under /blog/{slug}. Prefer these pages for full articles.
+
+## Index and discovery
+Sitemap index: https://urbanoise.com/sitemap-index.xml
+
+## Access policy
+Allow: /
+Disallow: /wpheadless/
+
+## Contact
+info@urbanoise.com

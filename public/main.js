@@ -35,9 +35,32 @@ const aboutLink = document.querySelector('a[href="#about"]');
 const footerBackLink = document.querySelector('a[href="#stage"]');
 const mockupSection = document.querySelector("#mockup");
 const articlesSection = document.querySelector(".articles-section");
+const articleOverlay = document.querySelector(".article-overlay");
+const articleFrame = document.querySelector(".article-frame");
+const articleFrameBody = document.querySelector(".article-frame-body");
+const articleContent = document.querySelector(".article-content");
+const articleLoading = document.querySelector(".article-loading");
+const articleClose = document.querySelector(".article-close");
+const articleLinks = Array.from(document.querySelectorAll(".article-thumb-link[data-post-id]"));
+const articleDataScript = document.querySelector("#article-data");
+let articleData = [];
+if (articleDataScript?.textContent) {
+  try {
+    const parsed = JSON.parse(articleDataScript.textContent);
+    articleData = Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    articleData = [];
+  }
+}
+const articleDataById = new Map(
+  articleData
+    .filter((item) => item?.id)
+    .map((item) => [String(item.id), item])
+);
 
 const LOCK_CLASS = "scroll-locked";
 const ENTERED_CLASS = "is-entered";
+const ARTICLE_OPEN_CLASS = "article-open";
 
 let entered = false;
 let logoTarget = { x: 0, y: 0, scale: 1 };
@@ -50,6 +73,7 @@ let aboutObserver = null;
 let mockupObserver = null;
 let entryRequested = false;
 let logoReadyForClick = false;
+let articleOpen = false;
 
 const lockScroll = () => {
   if (!body) return;
@@ -165,6 +189,119 @@ const initArticlesObserver = () => {
     }
   );
   articlesObserver.observe(articlesSection);
+};
+
+const stripHtml = (value) => (value ? value.replace(/<[^>]+>/g, "").trim() : "");
+
+const setArticleLoading = (on) => {
+  if (!articleLoading) return;
+  articleLoading.hidden = !on;
+  articleLoading.style.display = on ? "block" : "none";
+};
+
+const renderArticle = (article) => {
+  if (!articleContent) return;
+  const title = stripHtml(article?.title ?? "Untitled");
+  const content = article?.content ?? "";
+  const featuredUrl = article?.featuredUrl ?? "";
+  const featuredAlt = article?.featuredAlt ?? title;
+  const categories = Array.isArray(article?.categories)
+    ? article.categories.filter(Boolean)
+    : [];
+  const dateValue = article?.date ? new Date(article.date) : null;
+  const formattedDate = dateValue
+    ? dateValue.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+    : "";
+
+  const metaParts = [];
+  if (formattedDate) {
+    metaParts.push(`<time datetime="${article.date}">${formattedDate}</time>`);
+  }
+  if (categories.length) {
+    metaParts.push(`<span>${categories.join(" · ")}</span>`);
+  }
+
+  const metaMarkup = metaParts.length ? `<div class="article-meta">${metaParts.join("")}</div>` : "";
+  const heroMarkup = featuredUrl
+    ? `<figure class="article-hero"><img src="${featuredUrl}" alt="${featuredAlt}" loading="lazy" /></figure>`
+    : "";
+
+  articleContent.innerHTML = `
+    ${metaMarkup}
+    <h1 class="article-title">${title}</h1>
+    ${heroMarkup}
+    <div class="article-body">${content}</div>
+  `;
+};
+
+const openArticleOverlay = (article, fallbackUrl) => {
+  if (!articleOverlay || !articleFrame || !articleContent || !body) {
+    if (fallbackUrl) window.location.href = fallbackUrl;
+    return;
+  }
+  if (!article) {
+    if (fallbackUrl) window.location.href = fallbackUrl;
+    return;
+  }
+  if (articleOpen) return;
+  articleOverlay.hidden = false;
+  articleOpen = true;
+  body.classList.add(ARTICLE_OPEN_CLASS);
+  articleOverlay.classList.add("is-active");
+  articleOverlay.setAttribute("aria-hidden", "false");
+  articleContent.innerHTML = "";
+  setArticleLoading(true);
+  if (articleFrameBody) {
+    articleFrameBody.scrollTop = 0;
+  }
+  lockScroll();
+
+  gsap.to(articleOverlay, {
+    autoAlpha: 1,
+    duration: 0.25 * motionFactor,
+    ease: "power2.out",
+    overwrite: true,
+  });
+  gsap.to(articleFrame, {
+    yPercent: 0,
+    scale: 1,
+    duration: 0.85 * motionFactor,
+    ease: "power2.out",
+    overwrite: true,
+  });
+
+  renderArticle(article);
+  setArticleLoading(false);
+  articleClose?.focus();
+};
+
+const closeArticleOverlay = () => {
+  if (!articleOverlay || !articleFrame || !body || !articleOpen) return;
+  articleOpen = false;
+  body.classList.remove(ARTICLE_OPEN_CLASS);
+
+  gsap.to(articleFrame, {
+    yPercent: 120,
+    scale: 0.95,
+    duration: 0.45 * motionFactor,
+    ease: "power2.in",
+    overwrite: true,
+    onComplete: () => {
+      articleOverlay.classList.remove("is-active");
+      articleOverlay.setAttribute("aria-hidden", "true");
+      gsap.set(articleOverlay, { autoAlpha: 0 });
+      articleOverlay.hidden = true;
+      if (articleContent) articleContent.innerHTML = "";
+      setArticleLoading(false);
+      unlockScroll();
+    },
+  });
+  gsap.to(articleOverlay, {
+    autoAlpha: 0,
+    duration: 0.3 * motionFactor,
+    ease: "power2.out",
+    overwrite: true,
+  });
 };
 
 const hideBumperNow = () => {
@@ -543,6 +680,11 @@ if (videoFrame) {
   });
 }
 
+if (articleOverlay && articleFrame) {
+  gsap.set(articleOverlay, { autoAlpha: 0 });
+  gsap.set(articleFrame, { yPercent: 120, scale: 0.95 });
+}
+
 if (video && fallback) {
   video.addEventListener("canplay", () => fallback.classList.add("is-hidden"));
 }
@@ -593,6 +735,32 @@ aboutLink?.addEventListener("click", (event) => {
 footerBackLink?.addEventListener("click", (event) => {
   event.preventDefault();
   scrollToTarget(stage || "#stage");
+});
+
+articleLinks.forEach((link) => {
+  link.addEventListener("click", (event) => {
+    const postId = link.dataset.postId;
+    if (!postId) return;
+    event.preventDefault();
+    const article = articleDataById.get(postId);
+    openArticleOverlay(article, link.href);
+  });
+});
+
+articleClose?.addEventListener("click", () => {
+  closeArticleOverlay();
+});
+
+articleOverlay?.addEventListener("click", (event) => {
+  if (event.target === articleOverlay) {
+    closeArticleOverlay();
+  }
+});
+
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeArticleOverlay();
+  }
 });
 
 
