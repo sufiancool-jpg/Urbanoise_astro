@@ -1,4 +1,0 @@
-User-agent: *
-Disallow: /wpheadless/
-Allow: /
-Sitemap: https://urbanoise.com/sitemap-index.xml

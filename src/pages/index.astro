@@ -343,12 +343,17 @@ const structuredData = {
             <p class="footer-lead">
               Sign up to receive updates on new work, behind-the-scenes notes, and screenings.
             </p>
-            <form class="footer-newsletter-form">
+            <form
+              class="footer-newsletter-form"
+              method="POST"
+              action="https://d662e9e1.sibforms.com/serve/MUIFALaUJNiZduD2dWCUsUfuBClVksUauK1s3hNzI5niw4gMi_T2x4Xg5mNT5j0y1zKu6YIg94oAIPzy9pL3-uQMD3Vk0cz5TT_11GOsyoWvXN5eb1oli-pCM9eQXfRm93uhBy82UJ9q2RCF_FqGIIdeZpXUo_sCFavLq_oz7tJanmjQ_jxupGAIvdJCra8XmafQJXsr6MGnfHgyAw=="
+              target="brevo-target"
+            >
               <label class="sr-only" for="newsletter-email">Email address</label>
               <div class="footer-newsletter-field">
                 <input
                   id="newsletter-email"
-                  name="email"
+                  name="EMAIL"
                   type="email"
                   placeholder="Email address"
                   required
@@ -356,7 +361,12 @@ const structuredData = {
                 />
                 <button type="submit">Subscribe</button>
               </div>
+              <input type="text" name="email_address_check" value="" class="input--hidden" tabindex="-1" autocomplete="off" />
+              <input type="hidden" name="locale" value="en" />
+              <input type="hidden" name="html_type" value="simple" />
             </form>
+            <iframe name="brevo-target" class="brevo-iframe" title="Brevo submission target"></iframe>
+            <p class="footer-newsletter-status" role="status" aria-live="polite"></p>
           </div>
           <div class="footer-meta">
             <div class="footer-social" aria-label="Urbanoise social links">

@@ -830,6 +830,7 @@ body.at-mockup .site-brand {
   width: 100%;
 }
 
+
 .article-overlay {
   position: fixed;
   inset: 0;
@@ -1044,6 +1045,31 @@ body.at-mockup .site-brand {
 .footer-newsletter-field button:hover {
   opacity: 0.75;
   transform: translateY(-1px);
+}
+
+.footer-newsletter-form .input--hidden {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.footer-newsletter-status {
+  margin: 0.75rem 0 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  min-height: 1.1rem;
+}
+
+.brevo-iframe {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .footer-meta {

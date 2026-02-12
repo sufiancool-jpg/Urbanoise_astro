@@ -35,6 +35,8 @@ const aboutLink = document.querySelector('a[href="#about"]');
 const footerBackLink = document.querySelector('a[href="#stage"]');
 const mockupSection = document.querySelector("#mockup");
 const articlesSection = document.querySelector(".articles-section");
+const newsletterForm = document.querySelector(".footer-newsletter-form");
+const newsletterStatus = document.querySelector(".footer-newsletter-status");
 const articleOverlay = document.querySelector(".article-overlay");
 const articleFrame = document.querySelector(".article-frame");
 const articleFrameBody = document.querySelector(".article-frame-body");
@@ -762,6 +764,28 @@ window.addEventListener("keydown", (event) => {
     closeArticleOverlay();
   }
 });
+
+if (newsletterForm) {
+  const brevoTarget = document.querySelector("iframe[name=\"brevo-target\"]");
+  let newsletterSubmitting = false;
+
+  newsletterForm.addEventListener("submit", () => {
+    newsletterSubmitting = true;
+    if (newsletterStatus) {
+      newsletterStatus.textContent = "Submitting...";
+    }
+  });
+
+  brevoTarget?.addEventListener("load", () => {
+    if (!newsletterSubmitting) return;
+    newsletterSubmitting = false;
+    if (newsletterStatus) {
+      newsletterStatus.textContent = "Thanks — you’re subscribed.";
+    }
+    newsletterForm.reset();
+  });
+}
+
 
 
 // Keep target updated on resize
