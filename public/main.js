@@ -29,6 +29,43 @@ const videoFrame = document.querySelector(".video-frame");
 const video = document.querySelector(".hero-video");
 const fallback = document.querySelector(".video-fallback");
 const scrollBumper = document.querySelector(".scroll-bumper");
+const heroVideoSourceSets = {
+  desktop: [
+    { src: "/Photos/website_1p.webp", type: "video/webp" },
+    { src: "/Photos/website_1_1.mp4", type: "video/mp4" },
+  ],
+  phone: [{ src: "/Photos/website_1phone.mp4", type: "video/mp4" }],
+};
+
+const setHeroVideoSources = (key) => {
+  if (!video) return;
+  const sources = heroVideoSourceSets[key];
+  if (!sources) return;
+  if (video.dataset.heroSourceKey === key) return;
+  video.dataset.heroSourceKey = key;
+  video.innerHTML = "";
+  sources.forEach((item) => {
+    const sourceEl = document.createElement("source");
+    sourceEl.src = item.src;
+    sourceEl.type = item.type;
+    video.appendChild(sourceEl);
+  });
+  video.load();
+};
+
+const updateHeroVideoSources = () => {
+  const isPhone = Boolean(phoneMq?.matches);
+  setHeroVideoSources(isPhone ? "phone" : "desktop");
+};
+
+updateHeroVideoSources();
+if (phoneMq) {
+  if (phoneMq.addEventListener) {
+    phoneMq.addEventListener("change", updateHeroVideoSources);
+  } else if (phoneMq.addListener) {
+    phoneMq.addListener(updateHeroVideoSources);
+  }
+}
 
 const aboutSection = document.querySelector("#about");
 const aboutLink = document.querySelector('a[href="#about"]');
@@ -96,7 +133,13 @@ const unlockScroll = () => {
   body.style.left = "";
   body.style.right = "";
   body.style.width = "";
-  window.scrollTo(0, scrollLockY);
+
+  const targetY = scrollLockY;
+  const html = document.documentElement;
+  const previousScrollBehavior = html.style.scrollBehavior;
+  html.style.scrollBehavior = "auto";
+  window.scrollTo(0, targetY);
+  html.style.scrollBehavior = previousScrollBehavior;
 };
 
 const hideHeaderNow = () => {
