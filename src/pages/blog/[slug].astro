@@ -125,13 +125,28 @@ const structuredData = {
     <link rel="stylesheet" href="/styles-post.css" />
   </head>
   <body class="post-body">
+    <div class="page-transition-overlay" aria-hidden="true"></div>
     <header class="site-header post-header" aria-label="Primary">
       <div class="site-brand">
-        <a class="site-brand-link" href="/">Urbanoise</a>
+        <a class="site-brand-link" href="/#video">Urbanoise</a>
       </div>
-      <nav class="nav-links">
-        <a class="nav-link" href="/#mockup">Articles</a>
-        <a class="nav-link" href="/#about">About us</a>
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="primary-navigation"
+        aria-hidden="true"
+        tabindex="-1"
+        hidden
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span class="sr-only">Toggle menu</span>
+      </button>
+      <nav class="nav-links" id="primary-navigation">
+        <a class="nav-link" href="/#video">Home</a>
+        <a class="nav-link" href="mailto:info@urbanoise.com">Contact</a>
       </nav>
     </header>
     <main class="post-page">
@@ -149,5 +164,7 @@ const structuredData = {
         <div class="post-content" set:html={content}></div>
       </article>
     </main>
+    <script type="module" src="/nav-menu.js"></script>
+    <script type="module" src="/page-transition.js"></script>
   </body>
 </html>

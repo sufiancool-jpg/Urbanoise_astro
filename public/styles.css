@@ -39,6 +39,21 @@ body {
   scroll-snap-type: y mandatory;
 }
 
+*::selection {
+  background: #fff !important;
+  background-color: rgb(255 255 255 / 1) !important;
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+  text-shadow: none;
+}
+
+*::-moz-selection {
+  background: #fff !important;
+  background-color: rgb(255 255 255 / 1) !important;
+  color: #000 !important;
+  text-shadow: none;
+}
+
 body.scroll-locked {
   overflow: hidden;
   height: 100vh;
@@ -119,7 +134,46 @@ body.at-mockup .site-brand {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1rem;
+}
+
+.nav-toggle {
+  display: none !important;
+  width: 2.2rem;
+  height: 2.2rem;
+  padding: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0.12);
+  color: #fff;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.24rem;
+  cursor: pointer;
+}
+
+.nav-toggle span[aria-hidden="true"] {
+  display: block;
+  width: 1rem;
+  height: 1px;
+  background: currentColor;
+  transform-origin: center;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+body.menu-open .nav-toggle span[aria-hidden="true"]:nth-of-type(1) {
+  transform: translateY(0.33rem) rotate(45deg);
+}
+
+body.menu-open .nav-toggle span[aria-hidden="true"]:nth-of-type(2) {
+  opacity: 0;
+}
+
+body.menu-open .nav-toggle span[aria-hidden="true"]:nth-of-type(3) {
+  transform: translateY(-0.33rem) rotate(-45deg);
 }
 
 .nav-link {
@@ -161,6 +215,41 @@ body.at-mockup .site-brand {
 .nav-link:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 6px;
+}
+
+@media (max-width: 640px) {
+  .nav-toggle {
+    display: inline-flex !important;
+    margin-left: auto;
+    pointer-events: auto;
+  }
+
+  .site-header .nav-links {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+    min-width: 11.5rem;
+    padding: 0.45rem;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: rgba(11, 11, 11, 0.92);
+    backdrop-filter: blur(2px);
+  }
+
+  body.menu-open .site-header .nav-links {
+    display: flex;
+  }
+
+  .site-header .nav-link {
+    width: 100%;
+    justify-content: flex-start;
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    padding: 0.45rem 0.55rem;
+  }
 }
 
 .stage {
@@ -517,7 +606,7 @@ body.at-mockup .site-brand {
 .about-title {
   font-family: var(--font-logo);
   font-weight: 800;
-  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-size: clamp(1.68rem, 3.5vw, 2.66rem);
   letter-spacing: 0.08em;
   margin: 0;
   color: var(--text-dark);
@@ -1048,11 +1137,18 @@ body.at-mockup .site-brand {
 }
 
 .footer-newsletter-form .input--hidden {
-  position: absolute;
-  left: -9999px;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  clip: rect(0, 0, 0, 0) !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 .footer-newsletter-status {
@@ -1065,11 +1161,18 @@ body.at-mockup .site-brand {
 }
 
 .brevo-iframe {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  clip: rect(0, 0, 0, 0) !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 .footer-meta {

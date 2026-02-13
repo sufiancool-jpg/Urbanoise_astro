@@ -1,4 +1,4 @@
-import { gsap } from "./src/index.js";
+import gsap from "./src/index.js";
 import Flip from "./src/Flip.js";
 import ScrollToPlugin from "./src/ScrollToPlugin.js";
 
@@ -8,6 +8,9 @@ window.gsap = gsap;
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const motionFactor = prefersReducedMotion ? 0.75 : 1;
 const phoneMq = window.matchMedia("(max-width: 480px)");
+const initialUrl = new URL(window.location.href);
+const shouldAutoEnterVideo =
+  initialUrl.searchParams.get("view") === "video" || initialUrl.hash === "#video";
 
 const body = document.body;
 const header = document.querySelector(".site-header");
@@ -68,8 +71,12 @@ if (phoneMq) {
 }
 
 const aboutSection = document.querySelector("#about");
-const aboutLink = document.querySelector('a[href="#about"]');
+const contactSection = document.querySelector("#contact");
 const footerBackLink = document.querySelector('a[href="#stage"]');
+const startProjectNavLinks = Array.from(document.querySelectorAll(".site-header .nav-link")).filter((link) => {
+  const href = link.getAttribute("href") || "";
+  return href === "/start-a-project" || href === "/start-a-project/";
+});
 const mockupSection = document.querySelector("#mockup");
 const articlesSection = document.querySelector(".articles-section");
 const newsletterForm = document.querySelector(".footer-newsletter-form");
@@ -113,6 +120,56 @@ let mockupObserver = null;
 let entryRequested = false;
 let logoReadyForClick = false;
 let articleOpen = false;
+let pageTransitionInFlight = false;
+
+const navigateWithTransition = (url) => {
+  if (!url || pageTransitionInFlight) return;
+  pageTransitionInFlight = true;
+  const fadeDuration = prefersReducedMotion ? 0.16 : 0.45;
+  const contentDuration = prefersReducedMotion ? 0.12 : 0.32;
+
+  const overlay = document.createElement("div");
+  overlay.setAttribute("aria-hidden", "true");
+  Object.assign(overlay.style, {
+    position: "fixed",
+    inset: "0",
+    background: "#000",
+    opacity: "0",
+    pointerEvents: "none",
+    zIndex: "9999",
+  });
+  body?.appendChild(overlay);
+
+  const fadeTargets = [stage, header, contactSection].filter(Boolean);
+  const tl = gsap.timeline({
+    defaults: { ease: "power2.inOut" },
+    onComplete: () => {
+      window.location.assign(url);
+    },
+  });
+
+  if (fadeTargets.length) {
+    tl.to(
+      fadeTargets,
+      {
+        autoAlpha: 0,
+        y: -8,
+        duration: contentDuration,
+        stagger: 0.03,
+      },
+      0
+    );
+  }
+
+  tl.to(
+    overlay,
+    {
+      autoAlpha: 1,
+      duration: fadeDuration,
+    },
+    0.05
+  );
+};
 
 const lockScroll = () => {
   if (!body) return;
@@ -553,16 +610,17 @@ const scrollToTarget = (target, offset = 0) => {
 };
 
 const scrollToAbout = () => {
+  const targetSection = contactSection || aboutSection || mockupSection;
   if (entered) {
-    scrollToTarget(aboutSection, 10);
+    scrollToTarget(targetSection, 10);
     return;
   }
-  enterSite({ scrollAfter: true, scrollTarget: aboutSection, scrollOffset: 10 });
+  enterSite({ scrollAfter: true, scrollTarget: targetSection, scrollOffset: 10 });
 };
 
 const enterSite = ({ scrollAfter = false, scrollTarget = null, scrollOffset = 0 } = {}) => {
   if (entered) {
-    if (scrollAfter) scrollToTarget(scrollTarget || aboutSection, scrollOffset);
+    if (scrollAfter) scrollToTarget(scrollTarget || contactSection || aboutSection || mockupSection, scrollOffset);
     return;
   }
   if (enterTween) return;
@@ -593,7 +651,7 @@ const enterSite = ({ scrollAfter = false, scrollTarget = null, scrollOffset = 0 
         stageOverlay?.setAttribute("aria-hidden", "true");
         showBumperNow();
         if (scrollAfter) {
-          const target = scrollTarget || aboutSection;
+          const target = scrollTarget || contactSection || aboutSection || mockupSection;
           const offset = scrollOffset || 0;
           scrollToTarget(target, offset);
         }
@@ -746,8 +804,25 @@ const queueLogoIntro = () => {
     requestAnimationFrame(() => requestAnimationFrame(animateLogoIntro));
   });
 };
-window.addEventListener("load", queueLogoIntro, { once: true });
-setTimeout(queueLogoIntro, 900);
+if (shouldAutoEnterVideo) {
+  window.addEventListener(
+    "load",
+    () => {
+      enterSite();
+      const url = new URL(window.location.href);
+      url.searchParams.delete("view");
+      if (url.hash === "#video") {
+        url.hash = "";
+      }
+      const cleaned = `${url.pathname}${url.search}${url.hash}`;
+      window.history.replaceState({}, "", cleaned);
+    },
+    { once: true }
+  );
+} else {
+  window.addEventListener("load", queueLogoIntro, { once: true });
+  setTimeout(queueLogoIntro, 900);
+}
 
 // Enter interactions
 const triggerEntrance = () => {
@@ -768,14 +843,18 @@ enterCta?.addEventListener("click", () => {
   triggerEntrance();
 });
 
+startProjectNavLinks.forEach((link) => {
+  link.addEventListener("click", (event) => {
+    if (event.defaultPrevented) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (link.target === "_blank") return;
+    event.preventDefault();
+    navigateWithTransition(link.href);
+  });
+});
+
 // Scroll bumper
 scrollBumper?.addEventListener("click", scrollToAbout);
-
-// Header about link
-aboutLink?.addEventListener("click", (event) => {
-  event.preventDefault();
-  scrollToAbout();
-});
 
 footerBackLink?.addEventListener("click", (event) => {
   event.preventDefault();

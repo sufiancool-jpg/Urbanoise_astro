@@ -3,6 +3,29 @@ body.post-body {
   background: var(--pantone-8245c);
 }
 
+*::selection {
+  background: #fff !important;
+  background-color: rgb(255 255 255 / 1) !important;
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+  text-shadow: none;
+}
+
+*::-moz-selection {
+  background: #fff !important;
+  background-color: rgb(255 255 255 / 1) !important;
+  color: #000 !important;
+  text-shadow: none;
+}
+
+.page-transition-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 9999;
+  pointer-events: none;
+}
+
 main.post-page {
   scroll-snap-type: none;
   min-height: 100vh;
@@ -21,7 +44,7 @@ main.post-page {
   pointer-events: auto;
   transform: none;
   padding: 1.5rem 2.25rem 1rem;
-  background: linear-gradient(180deg, rgba(58, 119, 122, 0.96) 0%, rgba(58, 119, 122, 0) 100%);
+  background: transparent;
   z-index: 10;
 }
 
@@ -131,7 +154,7 @@ main.post-page {
   }
 
   .nav-links {
-    gap: 0.75rem;
+    gap: 0.6rem;
   }
 
   .nav-link {
@@ -147,12 +170,12 @@ main.post-page {
 
 @media (max-width: 540px) {
   .post-header {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
     gap: 0.75rem;
   }
 
-  .nav-links {
-    flex-wrap: wrap;
+  .post-header .nav-links {
+    flex-wrap: nowrap;
   }
 }

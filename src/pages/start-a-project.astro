@@ -1,0 +1,370 @@
+---
+const siteUrl = "https://urbanoise.com";
+const pageTitle = "Start a project | Urbanoise";
+const pageDescription =
+  "Share your project scope, timeline, and goals with Urbanoise to start a new collaboration.";
+const canonicalUrl = new URL("/start-a-project", siteUrl).href;
+const ogImage = `${siteUrl}/Opengraph.jpg`;
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  name: "Start a project | Urbanoise",
+  url: canonicalUrl,
+  description: pageDescription,
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="description" content={pageDescription} />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="Urbanoise" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={ogImage} />
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=tanker@400&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/styles-post.css" />
+  </head>
+  <body class="post-body start-project-body">
+    <div class="page-transition-overlay" aria-hidden="true"></div>
+    <header class="site-header post-header" aria-label="Primary">
+      <div class="site-brand">
+        <a class="site-brand-link" href="/#video">Urbanoise</a>
+      </div>
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="primary-navigation"
+        aria-hidden="true"
+        tabindex="-1"
+        hidden
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span class="sr-only">Toggle menu</span>
+      </button>
+      <nav class="nav-links" id="primary-navigation">
+        <a class="nav-link" href="/#video">Home</a>
+        <a class="nav-link" href="/about-us">About us</a>
+        <a class="nav-link" href="mailto:info@urbanoise.com">Contact</a>
+      </nav>
+    </header>
+
+    <main class="post-page">
+      <article class="post-article">
+        <div class="post-content start-project-copy">
+          <img
+            class="start-project-hero-image"
+            src="/Photos/about/bg.jpg"
+            alt="Urbanoise project still"
+            loading="eager"
+            decoding="async"
+          />
+
+          <section class="content-section content-section--black intro-section">
+            <h1>Start a project with us</h1>
+            <h2>Photography complements our films where concentration, precision and reduction are required.</h2>
+            <p>
+              Photography complements our films where concentration, precision, and reduction are required.
+            </p>
+            <p>
+              It allows us to isolate space, material, and detail - moments where stillness reveals structure more
+              clearly than movement.
+            </p>
+            <p>
+              Our photographic work focuses on clarity and intent rather than decoration.
+            </p>
+          </section>
+
+          <div class="petrol-band">
+            <div class="petrol-band-inner">
+              <section class="content-section">
+                <h1>We make <span class="title-keyword">Films</span>.</h1>
+                <ul>
+                  <li>Long-form architectural films (7-12 min)</li>
+                  <li>Short-form architectural documentary films (2.5-4.5 min)</li>
+                  <li>Visual minutes, frames in motion, and audio-visual edits designed for social media representation</li>
+                </ul>
+              </section>
+
+              <section class="content-section">
+                <h1>We make <span class="title-keyword">Photographs</span>.</h1>
+                <ul>
+                  <li>Architectural photography</li>
+                  <li>Editorial &amp; documentary photography</li>
+                  <li>Detail and material studies</li>
+                  <li>Series and visual sets for publications, exhibitions, and digital platforms</li>
+                </ul>
+              </section>
+
+              <section class="content-section">
+                <h1>We make <span class="title-keyword">campaigns</span>.</h1>
+                <ul>
+                  <li>Media &amp; campaign strategy</li>
+                  <li>Narrative and content structure</li>
+                  <li>Visual language &amp; direction</li>
+                  <li>Platform and distribution guidance</li>
+                </ul>
+              </section>
+            </div>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <section class="footer-page" id="contact" aria-label="Get in touch">
+      <div class="footer-inner">
+        <div class="footer-newsletter">
+          <p class="footer-lead">
+            Sign up to receive updates on new work, behind-the-scenes notes, and screenings.
+          </p>
+          <form
+            class="footer-newsletter-form"
+            method="POST"
+            action="https://d662e9e1.sibforms.com/serve/MUIFALaUJNiZduD2dWCUsUfuBClVksUauK1s3hNzI5niw4gMi_T2x4Xg5mNT5j0y1zKu6YIg94oAIPzy9pL3-uQMD3Vk0cz5TT_11GOsyoWvXN5eb1oli-pCM9eQXfRm93uhBy82UJ9q2RCF_FqGIIdeZpXUo_sCFavLq_oz7tJanmjQ_jxupGAIvdJCra8XmafQJXsr6MGnfHgyAw=="
+            target="brevo-target"
+          >
+            <label class="sr-only" for="newsletter-email">Email address</label>
+            <div class="footer-newsletter-field">
+              <input
+                id="newsletter-email"
+                name="EMAIL"
+                type="email"
+                placeholder="Email address"
+                required
+                autocomplete="email"
+              />
+              <button type="submit">Subscribe</button>
+            </div>
+            <input
+              type="text"
+              name="email_address_check"
+              value=""
+              class="input--hidden"
+              tabindex="-1"
+              autocomplete="off"
+              aria-hidden="true"
+              style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;"
+            />
+            <input type="hidden" name="locale" value="en" />
+            <input type="hidden" name="html_type" value="simple" />
+          </form>
+          <iframe
+            name="brevo-target"
+            class="brevo-iframe"
+            title="Brevo submission target"
+            aria-hidden="true"
+            style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;border:0;clip-path:inset(50%);overflow:hidden;"
+          ></iframe>
+          <p class="footer-newsletter-status" role="status" aria-live="polite"></p>
+        </div>
+        <div class="footer-meta">
+          <div class="footer-social" aria-label="Urbanoise social links">
+            <a
+              class="footer-social-link"
+              href="https://www.instagram.com"
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label="Instagram"
+            >
+              <svg viewBox="0 0 24 24" role="img">
+                <path d="M17 2H7C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5zm3 15c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3h10c1.7 0 3 1.3 3 3v10z" />
+                <path d="M12 7.3A4.7 4.7 0 1 0 16.7 12 4.7 4.7 0 0 0 12 7.3zm0 7.6A2.9 2.9 0 1 1 14.9 12 2.9 2.9 0 0 1 12 14.9zM17.9 6.4a1.1 1.1 0 1 1-1.1-1.1 1.1 1.1 0 0 1 1.1 1.1z" />
+              </svg>
+            </a>
+            <a
+              class="footer-social-link"
+              href="https://www.linkedin.com"
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label="LinkedIn"
+            >
+              <svg viewBox="0 0 24 24" role="img">
+                <path d="M4.5 9h3v12h-3zM6 4.5a1.75 1.75 0 1 1-1.75 1.75A1.75 1.75 0 0 1 6 4.5zM9 9h2.8v1.7h.1a3.08 3.08 0 0 1 2.8-1.6c3 0 3.5 2 3.5 4.6V21h-3v-5.1c0-1.3 0-3-1.8-3s-2 1.4-2 2.9V21H9z" />
+              </svg>
+            </a>
+          </div>
+          <a class="footer-back" href="/#video">Back to main page</a>
+          <p class="footer-note">Urbanoise © 2025 Imprint</p>
+        </div>
+      </div>
+    </section>
+    <script type="module" src="/nav-menu.js"></script>
+    <script type="module" src="/page-transition.js"></script>
+    <style>
+      .start-project-body {
+        background: var(--pantone-8245c);
+      }
+
+      .start-project-body .post-header {
+        position: fixed;
+        top: 1.75rem;
+        left: 2.25rem;
+        right: 2.25rem;
+        padding: 0;
+        background: transparent;
+        z-index: 20;
+      }
+
+      .start-project-body .post-page {
+        background: #000;
+        min-height: 0;
+        padding: 0 clamp(1.5rem, 6vw, 5rem) 0;
+      }
+
+      .start-project-body .post-article {
+        box-shadow: none;
+        background: transparent;
+        border-radius: 0;
+        padding: 0;
+        width: 80%;
+        max-width: none;
+        margin: 0 auto;
+      }
+
+      .start-project-body .start-project-copy {
+        text-align: left;
+      }
+
+      .start-project-body .start-project-hero-image {
+        display: block;
+        width: 100vw;
+        max-width: none;
+        height: 20vh;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 0;
+        margin: 0 calc(50% - 50vw) clamp(1.5rem, 3vw, 2rem);
+      }
+
+      .start-project-body .content-section {
+        padding: clamp(1.1rem, 2.4vw, 1.75rem);
+      }
+
+      .start-project-body .content-section + .content-section {
+        margin-top: clamp(1rem, 2vw, 1.5rem);
+      }
+
+      .start-project-body .petrol-band {
+        position: relative;
+        z-index: 0;
+        margin-top: clamp(1rem, 2vw, 1.5rem);
+        color: #000;
+      }
+
+      .start-project-body .petrol-band::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: -1px;
+        left: 50%;
+        width: 100vw;
+        transform: translateX(-50%);
+        background: var(--pantone-8245c);
+        z-index: 0;
+      }
+
+      .start-project-body .footer-page {
+        margin-top: -1px;
+      }
+
+      .start-project-body .petrol-band-inner {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        margin: 0;
+      }
+
+      .start-project-body .petrol-band .content-section {
+        background: transparent;
+        color: inherit;
+      }
+
+      .start-project-body .content-section--black {
+        background: #000;
+        color: var(--pantone-8245c);
+      }
+
+      .start-project-body .intro-section,
+      .start-project-body .intro-section h1,
+      .start-project-body .intro-section h2,
+      .start-project-body .intro-section h3,
+      .start-project-body .intro-section p,
+      .start-project-body .intro-section li,
+      .start-project-body .intro-section .title-keyword {
+        color: var(--pantone-8245c) !important;
+      }
+
+      .start-project-body .content-section h1,
+      .start-project-body .content-section h2,
+      .start-project-body .content-section h3,
+      .start-project-body .content-section p,
+      .start-project-body .content-section li,
+      .start-project-body .content-section .title-keyword {
+        color: inherit;
+      }
+
+      .start-project-body .content-section h1 {
+        margin: 0 0 0.75rem;
+        font-size: clamp(1.6rem, 3.1vw, 2.85rem);
+        line-height: 1.12;
+      }
+
+      .start-project-body .content-section h2 {
+        margin: 0 0 0.45rem;
+        font-size: clamp(1.05rem, 2vw, 1.9rem);
+        line-height: 1.3;
+      }
+
+      .start-project-body .content-section p {
+        margin: 0 0 0.45rem;
+        font-size: clamp(0.95rem, 1.2vw, 1.15rem);
+        line-height: 1.55;
+      }
+
+      .start-project-body .content-section li {
+        font-size: clamp(0.95rem, 1.15vw, 1.1rem);
+        line-height: 1.5;
+      }
+
+      .start-project-body .content-section ul {
+        margin: 1rem 0 0;
+        padding-left: 1.25rem;
+      }
+
+    </style>
+  </body>
+</html>

@@ -1,0 +1,284 @@
+---
+const siteUrl = "https://urbanoise.com";
+const pageTitle = "About us | Urbanoise";
+const pageDescription =
+  "Urbanoise is a film and photography studio focused on architectural documentaries, spatial storytelling, and cinematic visuals.";
+const canonicalUrl = new URL("/about-us", siteUrl).href;
+const ogImage = `${siteUrl}/Opengraph.jpg`;
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  name: "About us | Urbanoise",
+  url: canonicalUrl,
+  description: pageDescription,
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="description" content={pageDescription} />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="Urbanoise" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={ogImage} />
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=tanker@400&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/styles-post.css" />
+  </head>
+  <body class="post-body about-us-body">
+    <div class="page-transition-overlay" aria-hidden="true"></div>
+    <header class="site-header post-header" aria-label="Primary">
+      <div class="site-brand">
+        <a class="site-brand-link" href="/#video">Urbanoise</a>
+      </div>
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="primary-navigation"
+        aria-hidden="true"
+        tabindex="-1"
+        hidden
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span class="sr-only">Toggle menu</span>
+      </button>
+      <nav class="nav-links" id="primary-navigation">
+        <a class="nav-link" href="/#video">Home</a>
+        <a class="nav-link" href="/start-a-project">Start a project</a>
+        <a class="nav-link" href="mailto:info@urbanoise.com">Contact</a>
+      </nav>
+    </header>
+
+    <main class="post-page">
+      <article class="post-article">
+        <div class="about-us-copy">
+          <h1 class="post-title">About Urbanoise</h1>
+          <div class="post-content">
+            <p>
+              URBANOISE is a production company founded by director/cinematographer Sufian Ararah and photographer and
+              architect Rokas Jankus in 2026, dedicated to architectural documentaries in film and photography.
+            </p>
+            <p>
+              At the core of our practice lies observation rather than staging. We document processes, uses, transitions
+              and atmospheres as they unfold, allowing architecture to be understood within its real context.
+            </p>
+            <p>
+              URBANOISE stands for a documentary and artistic engagement with architecture and urban space. Works that
+              aim not at attention, but at understanding.
+            </p>
+          </div>
+        </div>
+        <figure class="about-us-photo-wrap">
+          <img
+            class="about-us-photo"
+            src="/Photos/us2.JPG"
+            alt="Urbanoise founders portrait"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+      </article>
+    </main>
+
+    <section class="footer-page" id="contact" aria-label="Get in touch">
+      <div class="footer-inner">
+        <div class="footer-newsletter">
+          <p class="footer-lead">
+            Sign up to receive updates on new work, behind-the-scenes notes, and screenings.
+          </p>
+          <form
+            class="footer-newsletter-form"
+            method="POST"
+            action="https://d662e9e1.sibforms.com/serve/MUIFALaUJNiZduD2dWCUsUfuBClVksUauK1s3hNzI5niw4gMi_T2x4Xg5mNT5j0y1zKu6YIg94oAIPzy9pL3-uQMD3Vk0cz5TT_11GOsyoWvXN5eb1oli-pCM9eQXfRm93uhBy82UJ9q2RCF_FqGIIdeZpXUo_sCFavLq_oz7tJanmjQ_jxupGAIvdJCra8XmafQJXsr6MGnfHgyAw=="
+            target="brevo-target"
+          >
+            <label class="sr-only" for="newsletter-email">Email address</label>
+            <div class="footer-newsletter-field">
+              <input
+                id="newsletter-email"
+                name="EMAIL"
+                type="email"
+                placeholder="Email address"
+                required
+                autocomplete="email"
+              />
+              <button type="submit">Subscribe</button>
+            </div>
+            <input
+              type="text"
+              name="email_address_check"
+              value=""
+              class="input--hidden"
+              tabindex="-1"
+              autocomplete="off"
+              aria-hidden="true"
+              style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;"
+            />
+            <input type="hidden" name="locale" value="en" />
+            <input type="hidden" name="html_type" value="simple" />
+          </form>
+          <iframe
+            name="brevo-target"
+            class="brevo-iframe"
+            title="Brevo submission target"
+            aria-hidden="true"
+            style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;border:0;clip-path:inset(50%);overflow:hidden;"
+          ></iframe>
+          <p class="footer-newsletter-status" role="status" aria-live="polite"></p>
+        </div>
+        <div class="footer-meta">
+          <div class="footer-social" aria-label="Urbanoise social links">
+            <a
+              class="footer-social-link"
+              href="https://www.instagram.com"
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label="Instagram"
+            >
+              <svg viewBox="0 0 24 24" role="img">
+                <path d="M17 2H7C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5zm3 15c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3h10c1.7 0 3 1.3 3 3v10z" />
+                <path d="M12 7.3A4.7 4.7 0 1 0 16.7 12 4.7 4.7 0 0 0 12 7.3zm0 7.6A2.9 2.9 0 1 1 14.9 12 2.9 2.9 0 0 1 12 14.9zM17.9 6.4a1.1 1.1 0 1 1-1.1-1.1 1.1 1.1 0 0 1 1.1 1.1z" />
+              </svg>
+            </a>
+            <a
+              class="footer-social-link"
+              href="https://www.linkedin.com"
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label="LinkedIn"
+            >
+              <svg viewBox="0 0 24 24" role="img">
+                <path d="M4.5 9h3v12h-3zM6 4.5a1.75 1.75 0 1 1-1.75 1.75A1.75 1.75 0 0 1 6 4.5zM9 9h2.8v1.7h.1a3.08 3.08 0 0 1 2.8-1.6c3 0 3.5 2 3.5 4.6V21h-3v-5.1c0-1.3 0-3-1.8-3s-2 1.4-2 2.9V21H9z" />
+              </svg>
+            </a>
+          </div>
+          <a class="footer-back" href="/#video">Back to main page</a>
+          <p class="footer-note">Urbanoise © 2025 Imprint</p>
+        </div>
+      </div>
+    </section>
+    <script type="module" src="/nav-menu.js"></script>
+    <script type="module" src="/page-transition.js"></script>
+    <style>
+      .about-us-body .post-page {
+        justify-content: center;
+        padding: clamp(6rem, 12vh, 8rem) 2.25rem 6rem;
+      }
+
+      .about-us-body .post-article {
+        width: min(80%, 1400px);
+        margin: 0 auto;
+        background: transparent;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) clamp(260px, 28vw, 520px);
+        gap: clamp(1rem, 2vw, 2.25rem);
+        align-items: center;
+      }
+
+      .about-us-body .about-us-copy {
+        min-width: 0;
+        text-align: left;
+        width: min(100%, 72ch);
+        justify-self: end;
+      }
+
+      .about-us-body .about-us-photo-wrap {
+        margin: 0;
+        width: 100%;
+        max-width: clamp(260px, 28vw, 520px);
+        justify-self: start;
+        align-self: center;
+      }
+
+      .about-us-body .about-us-photo {
+        display: block;
+        width: 100%;
+        aspect-ratio: 3 / 4;
+        height: auto;
+        border-radius: 0;
+        object-fit: cover;
+      }
+
+      .about-us-body .post-meta,
+      .about-us-body .post-title,
+      .about-us-body .post-content {
+        text-align: left;
+      }
+
+      .about-us-body .post-content {
+        margin: 0;
+        max-width: none;
+        font-size: clamp(0.98rem, 0.4vw + 0.85rem, 1.2rem);
+        line-height: 1.55;
+      }
+
+      .about-us-body .post-content p {
+        margin: 0 0 clamp(0.8rem, 1.3vw, 1.1rem);
+      }
+
+      .about-us-body .post-title {
+        font-size: clamp(1.75rem, 1.3vw + 1rem, 3.35rem);
+        line-height: 1.12;
+        margin: 0 0 clamp(1rem, 1.8vw, 1.4rem);
+      }
+
+      @media (max-width: 768px) {
+        .about-us-body .post-page {
+          padding: clamp(6rem, 12vh, 8rem) 1.5rem 6rem;
+        }
+
+        .about-us-body .post-article {
+          width: 80%;
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+
+        .about-us-body .about-us-copy {
+          width: 100%;
+          justify-self: stretch;
+        }
+
+        .about-us-body .about-us-photo-wrap {
+          max-width: 320px;
+          justify-self: center;
+        }
+      }
+    </style>
+  </body>
+</html>
