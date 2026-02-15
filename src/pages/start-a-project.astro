@@ -2,7 +2,7 @@
 const siteUrl = "https://urbanoise.com";
 const pageTitle = "Start a project | Urbanoise";
 const pageDescription =
-  "Share your project scope, timeline, and goals with Urbanoise to start a new collaboration.";
+  "Urbanoise develops cinematic works that examine architecture as spatial and temporal experience.";
 const canonicalUrl = new URL("/start-a-project", siteUrl).href;
 const ogImage = `${siteUrl}/Opengraph.jpg`;
 const structuredData = {
@@ -49,7 +49,7 @@ const structuredData = {
       rel="stylesheet"
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/styles.css" />
@@ -76,156 +76,217 @@ const structuredData = {
         <span class="sr-only">Toggle menu</span>
       </button>
       <nav class="nav-links" id="primary-navigation">
-        <a class="nav-link" href="/#video">Home</a>
+        <a class="nav-link" href="/start-a-project">Start a project</a>
         <a class="nav-link" href="/about-us">About us</a>
         <a class="nav-link" href="mailto:info@urbanoise.com">Contact</a>
       </nav>
     </header>
 
-    <main class="post-page">
-      <article class="post-article">
-        <div class="post-content start-project-copy">
-          <img
-            class="start-project-hero-image"
-            src="/Photos/about/bg.jpg"
-            alt="Urbanoise project still"
-            loading="eager"
-            decoding="async"
-          />
+    <main id="smooth-wrapper" class="project-smooth-wrapper">
+      <div id="smooth-content" class="project-smooth-content">
+        <section class="post-page project-intro" aria-label="Urbanoise manifesto">
+          <div class="project-manifesto">
+            <h1 class="manifesto-title">We make films about<br />architecture.</h1>
 
-          <section class="content-section content-section--black intro-section">
-            <h1>Start a project with us</h1>
-            <h2>Photography complements our films where concentration, precision and reduction are required.</h2>
-            <p>
-              Photography complements our films where concentration, precision, and reduction are required.
-            </p>
-            <p>
-              It allows us to isolate space, material, and detail - moments where stillness reveals structure more
-              clearly than movement.
-            </p>
-            <p>
-              Our photographic work focuses on clarity and intent rather than decoration.
-            </p>
-          </section>
+            <div class="manifesto-block manifesto-block--italic">
+              <p>Architecture is often photographed.</p>
+              <p>Photography fixes a moment.</p>
+            </div>
 
-          <div class="petrol-band">
-            <div class="petrol-band-inner">
-              <section class="content-section">
-                <h1>We make <span class="title-keyword">Films</span>.</h1>
-                <ul>
-                  <li>Long-form architectural films (7-12 min)</li>
-                  <li>Short-form architectural documentary films (2.5-4.5 min)</li>
-                  <li>Visual minutes, frames in motion, and audio-visual edits designed for social media representation</li>
-                </ul>
-              </section>
+            <div class="manifesto-block manifesto-block--italic">
+              <p>Film works with time.</p>
+            </div>
 
-              <section class="content-section">
-                <h1>We make <span class="title-keyword">Photographs</span>.</h1>
-                <ul>
-                  <li>Architectural photography</li>
-                  <li>Editorial &amp; documentary photography</li>
-                  <li>Detail and material studies</li>
-                  <li>Series and visual sets for publications, exhibitions, and digital platforms</li>
-                </ul>
-              </section>
+            <div class="manifesto-block manifesto-block--italic">
+              <p>Through film, one can move through space.</p>
+              <p>One can hear how a room resonates.</p>
+              <p>One can observe how light travels across materials.</p>
+              <p>One can understand proportion as it unfolds.</p>
+            </div>
 
-              <section class="content-section">
-                <h1>We make <span class="title-keyword">campaigns</span>.</h1>
-                <ul>
-                  <li>Media &amp; campaign strategy</li>
-                  <li>Narrative and content structure</li>
-                  <li>Visual language &amp; direction</li>
-                  <li>Platform and distribution guidance</li>
-                </ul>
-              </section>
+            <div class="manifesto-block manifesto-block--italic">
+              <p>
+                <span class="manifesto-highlight-line">
+                  <span class="manifesto-highlight-base">Film makes architecture perceptible.</span>
+                  <span class="manifesto-highlight-overlay" aria-hidden="true">Film makes architecture perceptible.</span>
+                </span>
+              </p>
+            </div>
+
+            <div class="manifesto-signoff">
+              <p class="manifesto-brand">URBANOISE</p>
+              <p class="manifesto-summary">
+                develops cinematic works that examine architecture as spatial and<br />
+                temporal experience.
+              </p>
             </div>
           </div>
-        </div>
-      </article>
-    </main>
+        </section>
 
-    <section class="footer-page" id="contact" aria-label="Get in touch">
-      <div class="footer-inner">
-        <div class="footer-newsletter">
-          <p class="footer-lead">
-            Sign up to receive updates on new work, behind-the-scenes notes, and screenings.
-          </p>
-          <form
-            class="footer-newsletter-form"
-            method="POST"
-            action="https://d662e9e1.sibforms.com/serve/MUIFALaUJNiZduD2dWCUsUfuBClVksUauK1s3hNzI5niw4gMi_T2x4Xg5mNT5j0y1zKu6YIg94oAIPzy9pL3-uQMD3Vk0cz5TT_11GOsyoWvXN5eb1oli-pCM9eQXfRm93uhBy82UJ9q2RCF_FqGIIdeZpXUo_sCFavLq_oz7tJanmjQ_jxupGAIvdJCra8XmafQJXsr6MGnfHgyAw=="
-            target="brevo-target"
-          >
-            <label class="sr-only" for="newsletter-email">Email address</label>
-            <div class="footer-newsletter-field">
-              <input
-                id="newsletter-email"
-                name="EMAIL"
-                type="email"
-                placeholder="Email address"
-                required
-                autocomplete="email"
-              />
-              <button type="submit">Subscribe</button>
+        <section class="film-section service-section" aria-label="Film services">
+          <div class="film-inner">
+            <h2 class="film-title">FILM</h2>
+
+            <div class="film-strip" aria-label="Film stills">
+              <img src="/Photos/about/1.jpg" alt="Architectural film still one" loading="lazy" decoding="async" />
+              <img src="/Photos/about/2.jpg" alt="Architectural film still two" loading="lazy" decoding="async" />
+              <img src="/Photos/about/3.jpg" alt="Architectural film still three" loading="lazy" decoding="async" />
             </div>
-            <input
-              type="text"
-              name="email_address_check"
-              value=""
-              class="input--hidden"
-              tabindex="-1"
-              autocomplete="off"
-              aria-hidden="true"
-              style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;"
-            />
-            <input type="hidden" name="locale" value="en" />
-            <input type="hidden" name="html_type" value="simple" />
-          </form>
-          <iframe
-            name="brevo-target"
-            class="brevo-iframe"
-            title="Brevo submission target"
-            aria-hidden="true"
-            style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;border:0;clip-path:inset(50%);overflow:hidden;"
-          ></iframe>
-          <p class="footer-newsletter-status" role="status" aria-live="polite"></p>
-        </div>
-        <div class="footer-meta">
-          <div class="footer-social" aria-label="Urbanoise social links">
-            <a
-              class="footer-social-link"
-              href="https://www.instagram.com"
-              target="_blank"
-              rel="noreferrer noopener"
-              aria-label="Instagram"
-            >
-              <svg viewBox="0 0 24 24" role="img">
-                <path d="M17 2H7C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5zm3 15c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3h10c1.7 0 3 1.3 3 3v10z" />
-                <path d="M12 7.3A4.7 4.7 0 1 0 16.7 12 4.7 4.7 0 0 0 12 7.3zm0 7.6A2.9 2.9 0 1 1 14.9 12 2.9 2.9 0 0 1 12 14.9zM17.9 6.4a1.1 1.1 0 1 1-1.1-1.1 1.1 1.1 0 0 1 1.1 1.1z" />
-              </svg>
-            </a>
-            <a
-              class="footer-social-link"
-              href="https://www.linkedin.com"
-              target="_blank"
-              rel="noreferrer noopener"
-              aria-label="LinkedIn"
-            >
-              <svg viewBox="0 0 24 24" role="img">
-                <path d="M4.5 9h3v12h-3zM6 4.5a1.75 1.75 0 1 1-1.75 1.75A1.75 1.75 0 0 1 6 4.5zM9 9h2.8v1.7h.1a3.08 3.08 0 0 1 2.8-1.6c3 0 3.5 2 3.5 4.6V21h-3v-5.1c0-1.3 0-3-1.8-3s-2 1.4-2 2.9V21H9z" />
-              </svg>
-            </a>
+
+            <div class="film-copy film-copy-single">
+              <p>We produce:</p>
+              <p>• Long-form architectural films (7–12 minutes)</p>
+              <p>• Short-form architectural documentary films (2.5–4.5 minutes)</p>
+              <p>• Condensed cinematic formats for digital platforms</p>
+              <div class="film-copy-note">
+                <p>Our films are structured, restrained and deliberate.</p>
+                <p>They follow the logic of space rather than the logic of promotion.</p>
+              </div>
+            </div>
           </div>
-          <a class="footer-back" href="/#video">Back to main page</a>
-          <p class="footer-note">Urbanoise © 2025 Imprint</p>
-        </div>
+        </section>
+
+        <section class="film-section photo-section service-section" aria-label="Photography services">
+          <div class="film-inner">
+            <h2 class="film-title">PHOTOGRAPHY</h2>
+
+            <div class="film-strip" aria-label="Photography stills">
+              <img src="/Photos/about/4.jpg" alt="Architectural photography still one" loading="lazy" decoding="async" />
+              <img src="/Photos/about/5.jpg" alt="Architectural photography still two" loading="lazy" decoding="async" />
+              <img src="/Photos/about/6.jpg" alt="Architectural photography still three" loading="lazy" decoding="async" />
+            </div>
+
+            <div class="film-copy film-copy-single">
+              <p>Photography is used when precision is required.</p>
+              <p class="film-copy-subhead">It allows us to:</p>
+              <p>• articulate detail</p>
+              <p>• examine materiality</p>
+              <p>• clarify construction</p>
+              <p>• condense singular moments</p>
+              <div class="film-copy-note">
+                <p>Film opens spatial experience.</p>
+                <p>Photography refines it.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="film-section consultation-section service-section" aria-label="Consultation services">
+          <div class="film-inner consultation-inner">
+            <h2 class="film-title">CONSULTATION</h2>
+
+            <div class="consultation-copy">
+              <p>Architecture requires structural clarity in communication.</p>
+
+              <p>
+                We advise studios, institutions and<br />
+                clients on the development of coherent media positioning.
+              </p>
+
+              <p class="consultation-subhead">Our consultation includes:</p>
+              <p>• analysis and structuring of content</p>
+              <p>• development of narrative frameworks</p>
+              <p>• alignment of film, photography and text</p>
+              <p>• strategic planning of release and distribution</p>
+
+              <p class="consultation-note">
+                Not in a promotional sense,<br />
+                but in pursuit of coherence.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="footer-page" id="contact" aria-label="Get in touch">
+          <div class="footer-inner">
+            <div class="footer-newsletter">
+              <p class="footer-lead">
+                Sign up to receive updates on new work, behind-the-scenes notes, and screenings.
+              </p>
+              <form
+                class="footer-newsletter-form"
+                method="POST"
+                action="https://d662e9e1.sibforms.com/serve/MUIFALaUJNiZduD2dWCUsUfuBClVksUauK1s3hNzI5niw4gMi_T2x4Xg5mNT5j0y1zKu6YIg94oAIPzy9pL3-uQMD3Vk0cz5TT_11GOsyoWvXN5eb1oli-pCM9eQXfRm93uhBy82UJ9q2RCF_FqGIIdeZpXUo_sCFavLq_oz7tJanmjQ_jxupGAIvdJCra8XmafQJXsr6MGnfHgyAw=="
+                target="brevo-target"
+              >
+                <label class="sr-only" for="newsletter-email">Email address</label>
+                <div class="footer-newsletter-field">
+                  <input
+                    id="newsletter-email"
+                    name="EMAIL"
+                    type="email"
+                    placeholder="Email address"
+                    required
+                    autocomplete="email"
+                  />
+                  <button type="submit">Subscribe</button>
+                </div>
+                <input
+                  type="text"
+                  name="email_address_check"
+                  value=""
+                  class="input--hidden"
+                  tabindex="-1"
+                  autocomplete="off"
+                  aria-hidden="true"
+                  style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;"
+                />
+                <input type="hidden" name="locale" value="en" />
+                <input type="hidden" name="html_type" value="simple" />
+              </form>
+              <iframe
+                name="brevo-target"
+                class="brevo-iframe"
+                title="Brevo submission target"
+                aria-hidden="true"
+                style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;border:0;clip-path:inset(50%);overflow:hidden;"
+              ></iframe>
+              <p class="footer-newsletter-status" role="status" aria-live="polite"></p>
+            </div>
+            <div class="footer-meta">
+              <div class="footer-social" aria-label="Urbanoise social links">
+                <a
+                  class="footer-social-link"
+                  href="https://www.instagram.com"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  aria-label="Instagram"
+                >
+                  <svg viewBox="0 0 24 24" role="img">
+                    <path d="M17 2H7C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5zm3 15c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3h10c1.7 0 3 1.3 3 3v10z" />
+                    <path d="M12 7.3A4.7 4.7 0 1 0 16.7 12 4.7 4.7 0 0 0 12 7.3zm0 7.6A2.9 2.9 0 1 1 14.9 12 2.9 2.9 0 0 1 12 14.9zM17.9 6.4a1.1 1.1 0 1 1-1.1-1.1 1.1 1.1 0 0 1 1.1 1.1z" />
+                  </svg>
+                </a>
+                <a
+                  class="footer-social-link"
+                  href="https://www.linkedin.com"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  aria-label="LinkedIn"
+                >
+                  <svg viewBox="0 0 24 24" role="img">
+                    <path d="M4.5 9h3v12h-3zM6 4.5a1.75 1.75 0 1 1-1.75 1.75A1.75 1.75 0 0 1 6 4.5zM9 9h2.8v1.7h.1a3.08 3.08 0 0 1 2.8-1.6c3 0 3.5 2 3.5 4.6V21h-3v-5.1c0-1.3 0-3-1.8-3s-2 1.4-2 2.9V21H9z" />
+                  </svg>
+                </a>
+              </div>
+              <a class="footer-back" href="/#video">Back to main page</a>
+              <p class="footer-note">Urbanoise © 2025 Imprint</p>
+            </div>
+          </div>
+        </section>
       </div>
-    </section>
+    </main>
     <script type="module" src="/nav-menu.js"></script>
     <script type="module" src="/page-transition.js"></script>
+    <script type="module" src="/start-project.js"></script>
     <style>
       .start-project-body {
         background: var(--pantone-8245c);
+      }
+
+      .start-project-body .project-smooth-wrapper {
+        height: 100vh;
+        overflow: hidden;
       }
 
       .start-project-body .post-header {
@@ -238,133 +299,391 @@ const structuredData = {
         z-index: 20;
       }
 
-      .start-project-body .post-page {
-        background: #000;
-        min-height: 0;
-        padding: 0 clamp(1.5rem, 6vw, 5rem) 0;
+      .start-project-body .site-brand {
+        font-size: 1.04rem;
       }
 
-      .start-project-body .post-article {
-        box-shadow: none;
-        background: transparent;
-        border-radius: 0;
-        padding: 0;
-        width: 80%;
-        max-width: none;
+      .start-project-body .nav-link {
+        font-size: 0.68rem;
+      }
+
+      .start-project-body .project-intro {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: clamp(8.4rem, 14.5vh, 10.4rem) 2.25rem clamp(3.8rem, 7.2vh, 5.4rem);
+        box-sizing: border-box;
+        min-height: 100vh;
+        min-height: 100svh;
+        height: 100svh;
+        overflow: hidden;
+        background: var(--pantone-8245c);
+      }
+
+      .start-project-body .project-manifesto {
+        width: min(100%, 730px);
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .start-project-body .manifesto-title {
+        margin: 0;
+        color: #fff;
+        font-family: var(--font-body);
+        font-weight: 600;
+        font-size: clamp(1.56rem, 0.82vw + 1.08rem, 2.3rem);
+        line-height: 1.13;
+        text-transform: none;
+      }
+
+      .start-project-body .manifesto-block {
+        margin-top: clamp(1.45rem, 2.6vh, 1.95rem);
+      }
+
+      .start-project-body .manifesto-title + .manifesto-block {
+        margin-top: clamp(1.9rem, 3.4vh, 2.45rem);
+      }
+
+      .start-project-body .manifesto-block p {
+        margin: 0;
+        color: #fff;
+        font-family: var(--font-body);
+        font-size: clamp(0.82rem, 0.3vw + 0.74rem, 1.02rem);
+        line-height: 1.32;
+        font-weight: 400;
+      }
+
+      .start-project-body .manifesto-block--italic p {
+        font-style: italic;
+        font-weight: 400;
+      }
+
+      .start-project-body .manifesto-highlight-line {
+        --line-fill: 0%;
+        position: relative;
+        display: inline-block;
+        max-width: 100%;
+      }
+
+      .start-project-body .manifesto-highlight-base,
+      .start-project-body .manifesto-highlight-overlay {
+        display: block;
+        padding: 0.01em 0.08em 0.05em;
+      }
+
+      .start-project-body .manifesto-highlight-base {
+        color: #fff;
+      }
+
+      .start-project-body .manifesto-highlight-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        color: #0a0a0a;
+        background: #fff;
+        clip-path: inset(0 calc(100% - var(--line-fill)) 0 0);
+        -webkit-clip-path: inset(0 calc(100% - var(--line-fill)) 0 0);
+        pointer-events: none;
+      }
+
+      @supports not (clip-path: inset(0 0 0 0)) {
+        .start-project-body .manifesto-highlight-overlay {
+          width: var(--line-fill);
+          overflow: hidden;
+          clip-path: none;
+          -webkit-clip-path: none;
+          white-space: nowrap;
+        }
+      }
+
+      .start-project-body .manifesto-signoff {
+        margin-top: clamp(2.05rem, 3.6vh, 2.75rem);
+      }
+
+      .start-project-body .manifesto-brand {
+        margin: 0;
+        color: #fff;
+        font-family: var(--font-logo);
+        font-weight: 800;
+        font-size: clamp(1.14rem, 0.44vw + 0.98rem, 1.66rem);
+        letter-spacing: var(--logo-letter-spacing);
+        line-height: 1;
+      }
+
+      .start-project-body .manifesto-summary {
+        margin: clamp(0.5rem, 0.9vh, 0.72rem) 0 0;
+        color: rgba(255, 255, 255, 0.95);
+        font-family: var(--font-body);
+        font-size: clamp(0.82rem, 0.3vw + 0.74rem, 1.02rem);
+        line-height: 1.32;
+        font-weight: 400;
+      }
+
+      .start-project-body .film-section {
+        position: relative;
+        min-height: 100vh;
+        min-height: 100svh;
+        height: 100svh;
+        background: #000;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        box-sizing: border-box;
+        overflow: hidden;
+        padding: clamp(11rem, 19.2vh, 13.8rem) 0 clamp(5.5rem, 11.5vh, 8.5rem);
+      }
+
+      .start-project-body .film-section:not(.photo-section) {
+        padding-top: clamp(9.35rem, 16.3vh, 11.7rem);
+      }
+
+
+      .start-project-body .film-inner {
+        width: 100%;
+        text-align: center;
+      }
+
+      .start-project-body .film-title {
+        margin: 0 0 clamp(2.1rem, 3.6vh, 3rem);
+        font-family: var(--font-logo);
+        font-weight: 800;
+        font-size: clamp(1.8rem, 1.2vw + 1.25rem, 3rem);
+        letter-spacing: 0.14em;
+        color: #fff;
+      }
+
+      .start-project-body .film-strip {
+        width: 100vw;
+        margin: 0 calc(50% - 50vw);
+        display: flex;
+        gap: 0;
+      }
+
+      .start-project-body .film-strip img {
+        width: 33.3333%;
+        height: clamp(250px, 34vh, 400px);
+        object-fit: cover;
+        display: block;
+      }
+
+      .start-project-body .film-copy {
+        margin: clamp(3.1rem, 6.8vh, 4.9rem) auto 0;
+        width: min(92%, 1080px);
+        text-align: center;
+      }
+
+      .start-project-body .film-copy-single {
+        display: block !important;
+        column-count: 1 !important;
+        column-gap: 0 !important;
+      }
+
+      .start-project-body .film-copy p {
+        margin: 0;
+        font-family: var(--font-body);
+        font-weight: 300;
+        font-size: clamp(0.86rem, 0.34vw + 0.77rem, 1.12rem);
+        line-height: 1.4;
+        color: rgba(255, 255, 255, 0.95);
+      }
+
+      .start-project-body .film-copy p:first-child {
+        font-weight: 400;
+      }
+
+      .start-project-body .film-copy p + p {
+        margin-top: clamp(0.3rem, 0.6vh, 0.5rem);
+      }
+
+      .start-project-body .film-copy-note {
+        margin-top: clamp(2.0rem, 5.3vh, 4.0rem);
+      }
+
+      .start-project-body .film-copy-note p + p {
+        margin-top: clamp(0.3rem, 0.6vh, 0.5rem);
+      }
+
+      .start-project-body .photo-section .film-copy-subhead {
+        font-weight: 700;
+        font-size: clamp(0.94rem, 0.4vw + 0.84rem, 1.28rem);
+        margin-top: clamp(1.35rem, 2.2vh, 1.95rem);
+        margin-bottom: clamp(0.55rem, 1vh, 0.9rem);
+      }
+
+      .start-project-body .photo-section .film-copy-subhead + p {
+        margin-top: 0;
+      }
+
+      .start-project-body .consultation-inner {
+        width: min(92%, 980px);
         margin: 0 auto;
       }
 
-      .start-project-body .start-project-copy {
-        text-align: left;
+      .start-project-body .consultation-section .film-title {
+        letter-spacing: 0.24em;
+        margin-bottom: clamp(2.4rem, 4.2vh, 3.4rem);
       }
 
-      .start-project-body .start-project-hero-image {
-        display: block;
-        width: 100vw;
-        max-width: none;
-        height: 20vh;
-        object-fit: cover;
-        object-position: center;
-        border-radius: 0;
-        margin: 0 calc(50% - 50vw) clamp(1.5rem, 3vw, 2rem);
+      .start-project-body .consultation-copy {
+        text-align: center;
+        width: min(100%, 760px);
+        margin: 0 auto;
       }
 
-      .start-project-body .content-section {
-        padding: clamp(1.1rem, 2.4vw, 1.75rem);
-      }
-
-      .start-project-body .content-section + .content-section {
-        margin-top: clamp(1rem, 2vw, 1.5rem);
-      }
-
-      .start-project-body .petrol-band {
-        position: relative;
-        z-index: 0;
-        margin-top: clamp(1rem, 2vw, 1.5rem);
-        color: #000;
-      }
-
-      .start-project-body .petrol-band::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: -1px;
-        left: 50%;
-        width: 100vw;
-        transform: translateX(-50%);
-        background: var(--pantone-8245c);
-        z-index: 0;
-      }
-
-      .start-project-body .footer-page {
-        margin-top: -1px;
-      }
-
-      .start-project-body .petrol-band-inner {
-        position: relative;
-        z-index: 1;
-        width: 100%;
+      .start-project-body .consultation-copy p {
         margin: 0;
+        color: rgba(255, 255, 255, 0.95);
+        font-family: var(--font-body);
+        font-size: clamp(0.86rem, 0.34vw + 0.77rem, 1.12rem);
+        font-weight: 400;
+        line-height: 1.4;
       }
 
-      .start-project-body .petrol-band .content-section {
-        background: transparent;
-        color: inherit;
+      .start-project-body .consultation-copy p + p {
+        margin-top: clamp(0.55rem, 1vh, 0.85rem);
       }
 
-      .start-project-body .content-section--black {
-        background: #000;
-        color: var(--pantone-8245c);
+      .start-project-body .consultation-copy p:nth-child(2) {
+        margin-top: clamp(1.6rem, 2.8vh, 2.25rem);
       }
 
-      .start-project-body .intro-section,
-      .start-project-body .intro-section h1,
-      .start-project-body .intro-section h2,
-      .start-project-body .intro-section h3,
-      .start-project-body .intro-section p,
-      .start-project-body .intro-section li,
-      .start-project-body .intro-section .title-keyword {
-        color: var(--pantone-8245c) !important;
+      .start-project-body .consultation-subhead {
+        margin-top: clamp(2rem, 3.4vh, 2.8rem) !important;
+        font-weight: 700 !important;
+        font-size: clamp(0.86rem, 0.34vw + 0.77rem, 1.12rem) !important;
       }
 
-      .start-project-body .content-section h1,
-      .start-project-body .content-section h2,
-      .start-project-body .content-section h3,
-      .start-project-body .content-section p,
-      .start-project-body .content-section li,
-      .start-project-body .content-section .title-keyword {
-        color: inherit;
+      .start-project-body .consultation-subhead + p {
+        margin-top: clamp(0.7rem, 1.2vh, 1rem);
       }
 
-      .start-project-body .content-section h1 {
-        margin: 0 0 0.75rem;
-        font-size: clamp(1.6rem, 3.1vw, 2.85rem);
-        line-height: 1.12;
+      .start-project-body .consultation-note {
+        margin-top: clamp(2rem, 3.5vh, 2.9rem) !important;
       }
 
-      .start-project-body .content-section h2 {
-        margin: 0 0 0.45rem;
-        font-size: clamp(1.05rem, 2vw, 1.9rem);
-        line-height: 1.3;
+      @media (max-width: 768px) {
+        .start-project-body .project-intro {
+          padding: clamp(7.4rem, 12.8vh, 8.8rem) 1.5rem 3.35rem;
+        }
+
+        .start-project-body .project-manifesto {
+          width: min(100%, 520px);
+        }
+
+        .start-project-body .manifesto-title {
+          font-size: clamp(1.24rem, 0.74vw + 0.98rem, 1.62rem);
+          line-height: 1.12;
+        }
+
+        .start-project-body .manifesto-block {
+          margin-top: 1.12rem;
+        }
+
+        .start-project-body .manifesto-title + .manifesto-block {
+          margin-top: 1.48rem;
+        }
+
+        .start-project-body .manifesto-block p {
+          font-size: clamp(0.76rem, 0.22vw + 0.72rem, 0.86rem);
+          line-height: 1.3;
+        }
+
+        .start-project-body .manifesto-brand {
+          font-size: clamp(0.94rem, 0.2vw + 0.9rem, 1.1rem);
+        }
+
+        .start-project-body .manifesto-summary {
+          font-size: clamp(0.76rem, 0.22vw + 0.72rem, 0.86rem);
+          line-height: 1.3;
+        }
+
+        .start-project-body .manifesto-summary br {
+          display: none;
+        }
+
+        .start-project-body .film-title {
+          letter-spacing: 0.1em;
+          margin-bottom: 1.35rem;
+          font-size: clamp(1.38rem, 1vw + 1.05rem, 2rem);
+        }
+
+        .start-project-body .film-strip img {
+          height: clamp(180px, 27vh, 260px);
+        }
+
+        .start-project-body .film-copy {
+          width: min(92%, 760px);
+          margin-top: clamp(2.2rem, 4.2vh, 3.2rem);
+        }
+
+        .start-project-body .film-copy p {
+          font-size: clamp(0.8rem, 0.26vw + 0.74rem, 0.92rem);
+          line-height: 1.36;
+        }
+
+        .start-project-body .film-copy p:first-child {
+          font-size: clamp(0.8rem, 0.26vw + 0.74rem, 0.92rem);
+        }
+
+        .start-project-body .film-copy-note {
+          margin-top: 2.35rem;
+        }
+
+        .start-project-body .photo-section .film-copy-subhead {
+          font-size: clamp(0.9rem, 0.34vw + 0.82rem, 1.05rem);
+          margin-top: 1.2rem;
+          margin-bottom: 0.7rem;
+        }
+
+        .start-project-body .consultation-section .film-title {
+          letter-spacing: 0.16em;
+          margin-bottom: 2rem;
+        }
+
+        .start-project-body .consultation-copy {
+          width: min(100%, 620px);
+        }
+
+        .start-project-body .consultation-copy p {
+          font-size: clamp(0.8rem, 0.26vw + 0.74rem, 0.92rem);
+          line-height: 1.36;
+        }
+
+        .start-project-body .consultation-copy p:nth-child(2) {
+          margin-top: 1.2rem;
+        }
+
+        .start-project-body .consultation-subhead {
+          margin-top: 1.65rem !important;
+          font-size: clamp(0.8rem, 0.26vw + 0.74rem, 0.92rem) !important;
+        }
+
+        .start-project-body .consultation-note {
+          margin-top: 1.7rem !important;
+        }
+
       }
 
-      .start-project-body .content-section p {
-        margin: 0 0 0.45rem;
-        font-size: clamp(0.95rem, 1.2vw, 1.15rem);
-        line-height: 1.55;
-      }
+      @media (max-width: 640px) {
+        .start-project-body .film-strip {
+          display: block;
+        }
 
-      .start-project-body .content-section li {
-        font-size: clamp(0.95rem, 1.15vw, 1.1rem);
-        line-height: 1.5;
-      }
+        .start-project-body .film-strip img {
+          display: none;
+          width: 100%;
+          height: clamp(220px, 30vh, 300px);
+        }
 
-      .start-project-body .content-section ul {
-        margin: 1rem 0 0;
-        padding-left: 1.25rem;
-      }
+        .start-project-body .film-strip img:first-child {
+          display: block;
+        }
 
+      }
     </style>
   </body>
 </html>
