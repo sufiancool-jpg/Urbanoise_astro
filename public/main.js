@@ -77,6 +77,8 @@ const startProjectNavLinks = Array.from(document.querySelectorAll(".site-header 
   const href = link.getAttribute("href") || "";
   return href === "/start-a-project" || href === "/start-a-project/";
 });
+const instantProjectShell = document.querySelector("[data-instant-project-shell]");
+const instantProjectFrame = document.querySelector("[data-instant-project-frame]");
 const mockupSection = document.querySelector("#mockup");
 const articlesSection = document.querySelector(".articles-section");
 const newsletterForm = document.querySelector(".footer-newsletter-form");
@@ -121,6 +123,9 @@ let entryRequested = false;
 let logoReadyForClick = false;
 let articleOpen = false;
 let pageTransitionInFlight = false;
+let instantProjectOpen = false;
+let instantProjectFrameReady = false;
+let instantProjectRevealTimeout = null;
 
 const navigateWithTransition = (url) => {
   if (!url || pageTransitionInFlight) return;
@@ -133,7 +138,7 @@ const navigateWithTransition = (url) => {
   Object.assign(overlay.style, {
     position: "fixed",
     inset: "0",
-    background: "#000",
+    background: "var(--pantone-8245c, #3a777a)",
     opacity: "0",
     pointerEvents: "none",
     zIndex: "9999",
@@ -169,6 +174,137 @@ const navigateWithTransition = (url) => {
     },
     0.05
   );
+};
+
+const isStartProjectPath = (pathname) =>
+  pathname === "/start-a-project" || pathname === "/start-a-project/";
+
+const normalizeInternalUrl = (rawUrl) => {
+  const url = new URL(rawUrl, window.location.href);
+  const pointsToFile = /\/[^/]+\.[^/]+$/.test(url.pathname);
+  if (!pointsToFile && url.pathname !== "/" && !url.pathname.endsWith("/")) {
+    url.pathname = `${url.pathname}/`;
+  }
+  return url;
+};
+
+const getInstantFadeTargets = () =>
+  [stage, header, contactSection].filter((target) => target instanceof HTMLElement);
+
+const clearInstantProjectRevealDelay = () => {
+  if (instantProjectRevealTimeout) {
+    window.clearTimeout(instantProjectRevealTimeout);
+    instantProjectRevealTimeout = null;
+  }
+};
+
+const scheduleInstantProjectReveal = () => {
+  if (!(instantProjectShell instanceof HTMLElement)) return;
+  clearInstantProjectRevealDelay();
+  const delayMs = prefersReducedMotion ? 70 : 560;
+  instantProjectRevealTimeout = window.setTimeout(() => {
+    instantProjectRevealTimeout = null;
+    if (!instantProjectOpen || !instantProjectFrameReady) return;
+    instantProjectShell.classList.add("is-ready");
+  }, delayMs);
+};
+
+const openStartProjectInstant = (targetUrl) => {
+  if (!(instantProjectShell instanceof HTMLElement) || !(instantProjectFrame instanceof HTMLIFrameElement)) {
+    navigateWithTransition(targetUrl.href);
+    return;
+  }
+  if (instantProjectOpen) return;
+
+  const nextUrl = normalizeInternalUrl(targetUrl.href);
+  if (instantProjectFrame.src !== nextUrl.href) {
+    instantProjectFrameReady = false;
+    instantProjectShell.classList.remove("is-ready");
+    instantProjectFrame.src = nextUrl.href;
+  }
+
+  instantProjectOpen = true;
+  body?.classList.add("instant-project-open");
+  instantProjectShell.classList.add("is-open");
+  instantProjectShell.setAttribute("aria-hidden", "false");
+  instantProjectShell.classList.remove("is-ready");
+  if (instantProjectFrameReady) {
+    scheduleInstantProjectReveal();
+  }
+
+  const fadeTargets = getInstantFadeTargets();
+  gsap.killTweensOf([...fadeTargets, instantProjectShell]);
+
+  gsap.to(fadeTargets, {
+    autoAlpha: 0,
+    y: -10,
+    duration: prefersReducedMotion ? 0.42 : 1.55 * motionFactor,
+    ease: "power3.out",
+    stagger: 0.03,
+    overwrite: true,
+  });
+
+  gsap.fromTo(
+    instantProjectShell,
+    {
+      autoAlpha: 0,
+      yPercent: 120,
+      scale: 0.7,
+      borderRadius: 26,
+      transformOrigin: "center center",
+    },
+    {
+      autoAlpha: 1,
+      yPercent: 0,
+      scale: 1,
+      borderRadius: 0,
+      duration: prefersReducedMotion ? 0.48 : 2.35 * motionFactor,
+      ease: "power3.inOut",
+      overwrite: true,
+    }
+  );
+
+  if (!isStartProjectPath(window.location.pathname)) {
+    const nextHistoryUrl = `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`;
+    window.history.pushState({ instantStartProject: true }, "", nextHistoryUrl);
+  }
+};
+
+const closeStartProjectInstant = ({ skipHistory = false } = {}) => {
+  if (!instantProjectOpen || !(instantProjectShell instanceof HTMLElement)) return;
+  instantProjectOpen = false;
+  body?.classList.remove("instant-project-open");
+  clearInstantProjectRevealDelay();
+
+  const fadeTargets = getInstantFadeTargets();
+  gsap.killTweensOf([...fadeTargets, instantProjectShell]);
+
+  gsap.to(instantProjectShell, {
+    autoAlpha: 0,
+    yPercent: 12,
+    scale: 0.985,
+    duration: prefersReducedMotion ? 0.2 : 0.45 * motionFactor,
+    ease: "power2.in",
+    overwrite: true,
+    onComplete: () => {
+      instantProjectShell.classList.remove("is-open");
+      instantProjectShell.setAttribute("aria-hidden", "true");
+      gsap.set(instantProjectShell, { clearProps: "transform,borderRadius" });
+    },
+  });
+
+  gsap.to(fadeTargets, {
+    autoAlpha: 1,
+    y: 0,
+    duration: prefersReducedMotion ? 0.2 : 0.45 * motionFactor,
+    ease: "power2.out",
+    stagger: 0.02,
+    overwrite: true,
+  });
+
+  if (!skipHistory && isStartProjectPath(window.location.pathname)) {
+    window.history.back();
+  }
 };
 
 const lockScroll = () => {
@@ -424,16 +560,6 @@ const showBumperNow = () => {
   });
 };
 
-const pulseCursor = () => {
-  if (!enterCta) return;
-  enterCta.classList.remove("cursor-animate");
-  // force reflow to restart animation
-  void enterCta.offsetWidth;
-  enterCta.classList.add("cursor-animate");
-  setTimeout(() => enterCta.classList.remove("cursor-animate"), 1200);
-};
-
-
 const revealLogoLetters = () => {
   if (logoWrap) {
     gsap.fromTo(
@@ -566,7 +692,6 @@ const animateLogoIntro = () => {
         overwrite: true,
       }
     );
-    gsap.delayedCall(0.2 * motionFactor, pulseCursor);
   };
 
   logoWrap.classList.add("logo--stack");
@@ -581,7 +706,6 @@ const animateLogoIntro = () => {
       onComplete: () => {
         gsap.set(logoWrap, { autoAlpha: 1 });
         computeLogoTarget();
-        gsap.delayedCall(0.25, pulseCursor);
       },
     });
   });
@@ -848,8 +972,10 @@ startProjectNavLinks.forEach((link) => {
     if (event.defaultPrevented) return;
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     if (link.target === "_blank") return;
+    const targetUrl = normalizeInternalUrl(link.href);
     event.preventDefault();
-    navigateWithTransition(link.href);
+    event.stopPropagation();
+    openStartProjectInstant(targetUrl);
   });
 });
 
@@ -883,7 +1009,41 @@ articleOverlay?.addEventListener("click", (event) => {
 
 window.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
+    if (instantProjectOpen) {
+      closeStartProjectInstant();
+      return;
+    }
     closeArticleOverlay();
+  }
+});
+
+if (instantProjectFrame instanceof HTMLIFrameElement) {
+  if (instantProjectFrame.contentDocument?.readyState === "complete") {
+    instantProjectFrameReady = true;
+    if (instantProjectShell instanceof HTMLElement) {
+      if (instantProjectOpen) {
+        scheduleInstantProjectReveal();
+      } else {
+        instantProjectShell.classList.add("is-ready");
+      }
+    }
+  }
+  instantProjectFrame.addEventListener("load", () => {
+    instantProjectFrameReady = true;
+    if (instantProjectShell instanceof HTMLElement) {
+      if (instantProjectOpen) {
+        scheduleInstantProjectReveal();
+      } else {
+        instantProjectShell.classList.add("is-ready");
+      }
+    }
+  });
+}
+
+window.addEventListener("popstate", () => {
+  if (!instantProjectOpen) return;
+  if (!isStartProjectPath(window.location.pathname)) {
+    closeStartProjectInstant({ skipHistory: true });
   }
 });
 

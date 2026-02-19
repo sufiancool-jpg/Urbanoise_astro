@@ -34,18 +34,19 @@ const structuredData = {
     <meta name="twitter:description" content={pageDescription} />
     <meta name="twitter:image" content={ogImage} />
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
+    <script is:inline>
+      (() => {
+        try {
+          if (window.sessionStorage.getItem("urbanoise:page-transition-entry") === "1") {
+            document.documentElement.classList.add("page-transition-entry");
+          }
+        } catch (_error) {}
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=tanker@400&display=swap"
       rel="stylesheet"
     />
     <link
@@ -85,14 +86,9 @@ const structuredData = {
     <main id="smooth-wrapper" class="project-smooth-wrapper">
       <div id="smooth-content" class="project-smooth-content">
         <section class="post-page project-intro" aria-label="Urbanoise manifesto">
-          <button
-            class="manifesto-hero-title"
-            type="button"
-            data-project-intro-trigger
-            aria-label="Enter manifesto"
-          >
+          <div class="manifesto-hero-title" aria-hidden="true">
             We make films about<br /><span class="hero-architecture-word" data-architecture-word>architecture</span>.
-          </button>
+          </div>
           <div class="project-manifesto" id="project-manifesto">
             <h1 class="manifesto-title manifesto-title-anchor" aria-hidden="true">We make films about<br />architecture.</h1>
 
@@ -121,6 +117,14 @@ const structuredData = {
               </p>
             </div>
 
+            <div class="manifesto-signoff">
+              <p class="manifesto-brand">URBANOISE</p>
+              <p class="manifesto-summary">
+                develops cinematic works that examine architecture as spatial and<br />
+                temporal experience.
+              </p>
+            </div>
+
           </div>
           <button class="project-scroll-cta" type="button" data-project-scroll-cta aria-label="Scroll down">
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -136,19 +140,22 @@ const structuredData = {
 
             <div class="film-strip" aria-label="Film stills">
               <img src="/Photos/about/1.jpg" alt="Architectural film still one" loading="lazy" decoding="async" />
-              <img src="/Photos/about/2.jpg" alt="Architectural film still two" loading="lazy" decoding="async" />
-              <img src="/Photos/about/3.jpg" alt="Architectural film still three" loading="lazy" decoding="async" />
+              <img src="/Photos/Video1.jpg" alt="Architectural film still two" loading="lazy" decoding="async" />
+              <img src="/Photos/video2.jpg" alt="Architectural film still three" loading="lazy" decoding="async" />
             </div>
 
-            <div class="film-copy film-copy-single">
-              <p>We produce:</p>
-              <p>• Long-form architectural films (7–12 minutes)</p>
-              <p>• Short-form architectural documentary films (2.5–4.5 minutes)</p>
-              <p>• Condensed cinematic formats for digital platforms</p>
-              <div class="film-copy-note">
-                <p>Our films are structured, restrained and deliberate.</p>
-                <p>They follow the logic of space rather than the logic of promotion.</p>
+            <div class="service-copy-grid">
+              <div class="film-copy film-copy-single">
+                <p>We produce:</p>
+                <p>• Long-form architectural documentary films (7–12 minutes)</p>
+                <p>• Short-form architectural documentary films (2.5–4.5 minutes)</p>
+                <p>• Condensed cinematic formats for digital platforms</p>
+                <div class="film-copy-note">
+                  <p>Our films are structured, restrained and deliberate.</p>
+                  <p>They follow the logic of space rather than the logic of promotion.</p>
+                </div>
               </div>
+              <a class="book-consultation-cta" href="https://www.cal.eu/urbanoise">Book a consultation</a>
             </div>
             <button class="section-scroll-cta" type="button" data-section-scroll-cta aria-label="Scroll down">
               <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -164,22 +171,21 @@ const structuredData = {
             <h2 class="film-title">PHOTOGRAPHY</h2>
 
             <div class="film-strip" aria-label="Photography stills">
-              <img src="/Photos/about/4.jpg" alt="Architectural photography still one" loading="lazy" decoding="async" />
-              <img src="/Photos/about/5.jpg" alt="Architectural photography still two" loading="lazy" decoding="async" />
-              <img src="/Photos/about/6.jpg" alt="Architectural photography still three" loading="lazy" decoding="async" />
+              <img src="/Photos/slide/Hasselburg-2.jpg" alt="Architectural photography still one" loading="lazy" decoding="async" />
+              <img src="/Photos/slide/Architektur_Sanaa-3.jpg" alt="Architectural photography still two" loading="lazy" decoding="async" />
+              <img src="/Photos/slide/Architektur_Neues Theater-08.jpg" alt="Architectural photography still three" loading="lazy" decoding="async" />
             </div>
 
-            <div class="film-copy film-copy-single">
-              <p>Photography is used when precision is required.</p>
-              <p class="film-copy-subhead">It allows us to:</p>
-              <p>• articulate detail</p>
-              <p>• examine materiality</p>
-              <p>• clarify construction</p>
-              <p>• condense singular moments</p>
-              <div class="film-copy-note">
-                <p>Film opens spatial experience.</p>
-                <p>Photography refines it.</p>
+            <div class="service-copy-grid">
+              <div class="film-copy film-copy-single">
+                <p>Photography is used when precision is required.</p>
+                <p class="film-copy-subhead">It allows us to:</p>
+                <p>• articulate detail</p>
+                <p>• examine materiality</p>
+                <p>• clarify construction</p>
+                <p>• condense singular moments</p>
               </div>
+              <a class="book-consultation-cta" href="https://www.cal.eu/urbanoise">Book a consultation</a>
             </div>
             <button class="section-scroll-cta section-scroll-cta--photo" type="button" data-section-scroll-cta aria-label="Scroll down">
               <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -194,24 +200,27 @@ const structuredData = {
           <div class="film-inner consultation-inner">
             <h2 class="film-title">CONSULTATION</h2>
 
-            <div class="consultation-copy">
-              <p>Architecture requires structural clarity in communication.</p>
+            <div class="service-copy-grid">
+              <div class="consultation-copy">
+                <p>Architecture requires structural clarity in communication.</p>
 
-              <p>
-                We advise studios, institutions and<br />
-                clients on the development of coherent media positioning.
-              </p>
+                <p>
+                  We advise studios, institutions and<br />
+                  clients on the development of coherent media positioning.
+                </p>
 
-              <p class="consultation-subhead">Our consultation includes:</p>
-              <p>• analysis and structuring of content</p>
-              <p>• development of narrative frameworks</p>
-              <p>• alignment of film, photography and text</p>
-              <p>• strategic planning of release and distribution</p>
+                <p class="consultation-subhead">Our consultation includes:</p>
+                <p>• analysis and structuring of content</p>
+                <p>• development of narrative frameworks</p>
+                <p>• alignment of film, photography and text</p>
+                <p>• strategic planning of release and distribution</p>
 
-              <p class="consultation-note">
-                Not in a promotional sense,<br />
-                but in pursuit of coherence.
-              </p>
+                <p class="consultation-note">
+                  Not in a promotional sense,<br />
+                  but in pursuit of coherence.
+                </p>
+              </div>
+              <a class="book-consultation-cta" href="https://www.cal.eu/urbanoise">Book a consultation</a>
             </div>
           </div>
         </section>
@@ -297,7 +306,7 @@ const structuredData = {
     </main>
     <script type="module" src="/nav-menu.js"></script>
     <script type="module" src="/page-transition.js"></script>
-    <script type="module" src="/start-project.js?v=20260218-intro-fix-17"></script>
+    <script type="module" src="/start-project.js?v=20260218-intro-fix-26"></script>
     <style>
       .start-project-body {
         background: var(--pantone-8245c);
@@ -328,10 +337,6 @@ const structuredData = {
         font-size: 1.04rem;
       }
 
-      .start-project-body .nav-link {
-        font-size: 0.68rem;
-      }
-
       .start-project-body .project-intro {
         position: relative;
         display: flex;
@@ -349,8 +354,8 @@ const structuredData = {
 
       .start-project-body .manifesto-hero-title {
         position: absolute;
-        top: clamp(10rem, 50svh, calc(100svh - 8.4rem));
-        top: clamp(10rem, 50dvh, calc(100dvh - 8.4rem));
+        top: calc(clamp(7.4rem, 25svh, calc(100svh - 13.6rem)) + 5px);
+        top: calc(clamp(7.4rem, 25dvh, calc(100dvh - 13.6rem)) + 5px);
         left: 50%;
         transform: translate(-50%, -50%);
         width: min(92%, 980px);
@@ -361,16 +366,25 @@ const structuredData = {
         color: #fff;
         font-family: var(--font-body);
         font-weight: 600;
-        font-size: clamp(2.2rem, 1.7vw + 1.7rem, 4.1rem);
+        font-size: clamp(1.87rem, 1.45vw + 1.45rem, 3.5rem);
         line-height: 1.14;
         text-align: center;
         white-space: normal;
-        pointer-events: auto;
-        cursor: pointer;
+        pointer-events: none;
+        cursor: default !important;
+        user-select: none;
+        -webkit-user-select: none;
         -webkit-appearance: none;
         appearance: none;
         touch-action: manipulation;
         z-index: 2;
+      }
+
+      .start-project-body .manifesto-hero-title *,
+      .start-project-body .manifesto-hero-title:hover,
+      .start-project-body .manifesto-hero-title:focus-visible {
+        cursor: default !important;
+        pointer-events: none !important;
       }
 
       .start-project-body .hero-architecture-word {
@@ -380,6 +394,7 @@ const structuredData = {
       .start-project-body .project-manifesto {
         width: min(100%, 730px);
         margin: 0 auto;
+        top: calc(clamp(1.45rem, 2.9vh, 2.45rem) - 25px);
         text-align: center;
         position: relative;
         z-index: 1;
@@ -456,11 +471,11 @@ const structuredData = {
       }
 
       .start-project-body .manifesto-block {
-        margin-top: clamp(1.45rem, 2.6vh, 1.95rem);
+        margin-top: clamp(1.62rem, 2.9vh, 2.18rem);
       }
 
       .start-project-body .manifesto-title + .manifesto-block {
-        margin-top: clamp(1.9rem, 3.4vh, 2.45rem);
+        margin-top: clamp(2.95rem, 5.2vh, 3.85rem);
       }
 
       .start-project-body .manifesto-block p {
@@ -594,13 +609,56 @@ const structuredData = {
         text-align: center;
       }
 
-      .start-project-body .film-main-section .film-copy,
-      .start-project-body .photo-section .film-copy,
-      .start-project-body .consultation-section .consultation-copy {
-        width: min(96%, 1120px);
-        margin-left: clamp(1.8rem, 7.5vw, 8.5rem);
-        margin-right: auto;
+      .start-project-body .service-copy-grid {
+        --section-grid-inset: clamp(2.7rem, 8.9vw, 10.4rem);
+        width: min(97%, 1260px);
+        margin: clamp(3.1rem, 6.8vh, 4.9rem) auto 0;
+        padding-left: var(--section-grid-inset);
+        padding-right: clamp(1rem, 3vw, 2.75rem);
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+        column-gap: clamp(2.2rem, 5vw, 5.25rem);
+      }
+
+      .start-project-body .service-copy-grid .film-copy,
+      .start-project-body .service-copy-grid .consultation-copy {
+        width: 100%;
+        margin: 0;
         text-align: left;
+      }
+
+      .start-project-body .book-consultation-cta {
+        --cta-left-shift: 15px;
+        display: inline-block;
+        align-self: center;
+        justify-self: end;
+        transform: translateX(calc(clamp(-3.1rem, -3vw, -2.2rem) - var(--cta-left-shift)));
+        margin-top: 0;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        color: #fff;
+        text-decoration: none;
+        font-family: var(--font-head);
+        font-weight: 700;
+        font-size: clamp(0.72rem, 0.26vw + 0.64rem, 0.92rem);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        padding: clamp(0.68rem, 1.24vh, 0.94rem) clamp(1.12rem, 2.24vw, 1.68rem);
+        line-height: 1;
+        white-space: nowrap;
+        transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      }
+
+      .start-project-body .book-consultation-cta:hover,
+      .start-project-body .book-consultation-cta:focus-visible {
+        background: #fff;
+        color: #000;
+        border-color: #fff;
+      }
+
+      .start-project-body .book-consultation-cta:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 4px;
       }
 
       .start-project-body .film-copy-single {
@@ -657,14 +715,15 @@ const structuredData = {
 
       .start-project-body .consultation-section .film-title {
         letter-spacing: 0.24em;
-        margin-bottom: clamp(2.85rem, 4.9vh, 3.95rem);
+        margin-bottom: clamp(3.9rem, 7.1vh, 5.6rem);
+      }
+
+      .start-project-body .consultation-section .service-copy-grid {
+        margin-top: clamp(4.2rem, 8vh, 6.15rem);
       }
 
       .start-project-body .consultation-copy {
         text-align: left;
-        width: min(96%, 1120px);
-        margin-left: clamp(1.8rem, 7.5vw, 8.5rem);
-        margin-right: auto;
       }
 
       .start-project-body .consultation-copy p {
@@ -707,14 +766,15 @@ const structuredData = {
         }
 
         .start-project-body .manifesto-hero-title {
-          top: clamp(7.5rem, 50svh, calc(100svh - 6.8rem));
-          top: clamp(7.5rem, 50dvh, calc(100dvh - 6.8rem));
-          font-size: clamp(1.8rem, 1.35vw + 1.45rem, 2.8rem);
+          top: calc(clamp(5.6rem, 26svh, calc(100svh - 11.4rem)) + 5px);
+          top: calc(clamp(5.6rem, 26dvh, calc(100dvh - 11.4rem)) + 5px);
+          font-size: clamp(1.53rem, 1.15vw + 1.23rem, 2.38rem);
           line-height: 1.12;
         }
 
         .start-project-body .project-manifesto {
           width: min(100%, 520px);
+          top: calc(clamp(0.78rem, 1.9vh, 1.38rem) - 12px);
         }
 
         .start-project-body .manifesto-title {
@@ -722,12 +782,26 @@ const structuredData = {
           line-height: 1.12;
         }
 
+        .start-project-body .manifesto-title-anchor {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          margin: -1px;
+          padding: 0;
+          border: 0;
+          overflow: hidden;
+          clip: rect(0, 0, 0, 0);
+          clip-path: inset(50%);
+          white-space: nowrap;
+          pointer-events: none;
+        }
+
         .start-project-body .manifesto-block {
-          margin-top: 1.12rem;
+          margin-top: 1.26rem;
         }
 
         .start-project-body .manifesto-title + .manifesto-block {
-          margin-top: 1.48rem;
+          margin-top: 1.14rem;
         }
 
         .start-project-body .manifesto-block p {
@@ -763,13 +837,29 @@ const structuredData = {
           margin-top: clamp(2.2rem, 4.2vh, 3.2rem);
         }
 
-        .start-project-body .film-main-section .film-copy,
-        .start-project-body .photo-section .film-copy,
-        .start-project-body .consultation-section .consultation-copy {
+        .start-project-body .service-copy-grid {
           width: auto;
-          margin-left: 1.2rem;
-          margin-right: 1.2rem;
+          margin-top: clamp(2.2rem, 4.2vh, 3.2rem);
+          padding-left: 1.6rem;
+          padding-right: 1.2rem;
+          grid-template-columns: 1fr;
+          row-gap: 1rem;
+        }
+
+        .start-project-body .service-copy-grid .film-copy,
+        .start-project-body .service-copy-grid .consultation-copy {
+          width: auto;
+          margin: 0;
           text-align: left;
+        }
+
+        .start-project-body .book-consultation-cta {
+          justify-self: center;
+          transform: translateX(calc(-1 * var(--cta-left-shift)));
+          margin-top: 0.65rem;
+          font-size: 0.72rem;
+          letter-spacing: 0.14em;
+          padding: 0.66rem 1.04rem;
         }
 
         .start-project-body .film-copy p {
@@ -798,7 +888,11 @@ const structuredData = {
 
         .start-project-body .consultation-section .film-title {
           letter-spacing: 0.16em;
-          margin-bottom: 2.35rem;
+          margin-bottom: 3.15rem;
+        }
+
+        .start-project-body .consultation-section .service-copy-grid {
+          margin-top: 3.2rem;
         }
 
         .start-project-body .consultation-copy {

@@ -21,9 +21,12 @@ body.post-body {
 .page-transition-overlay {
   position: fixed;
   inset: 0;
-  background: #000;
-  z-index: 9999;
+  background: var(--pantone-8245c, #3a777a);
+  z-index: 10040;
   pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  will-change: transform, opacity;
 }
 
 main.post-page {
@@ -158,8 +161,8 @@ main.post-page {
   }
 
   .nav-link {
-    font-size: 0.68rem;
-    letter-spacing: 0.18em;
+    font-size: var(--nav-link-size-mobile);
+    letter-spacing: var(--nav-link-letter-spacing-mobile);
     padding: 0.35rem 0.5rem;
   }
 

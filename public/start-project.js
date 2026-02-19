@@ -6,23 +6,18 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 window.gsap = gsap;
 
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const motionFactor = prefersReducedMotion ? 0.75 : 1;
 
 const body = document.body;
 const header = document.querySelector(".post-header");
 const introSection = document.querySelector(".project-intro");
 const heroTitle = introSection?.querySelector(".manifesto-hero-title");
+const architectureWordEl = heroTitle?.querySelector("[data-architecture-word]");
 const manifesto = introSection?.querySelector(".project-manifesto");
-const manifestoTitle = introSection?.querySelector(".manifesto-title");
 const manifestoSecondary = manifesto
   ? Array.from(manifesto.querySelectorAll(".manifesto-block, .manifesto-signoff"))
   : [];
-const architectureWordEl = heroTitle?.querySelector("[data-architecture-word]");
-const enterCta = introSection?.querySelector("[data-project-intro-cta]");
-const introTextTrigger = introSection?.querySelector("[data-project-intro-trigger]");
 const scrollDownCta = introSection?.querySelector("[data-project-scroll-cta]");
 const sectionScrollCtas = Array.from(document.querySelectorAll("[data-section-scroll-cta]"));
-const highlightLine = introSection?.querySelector(".manifesto-highlight-line");
 const revealSections = Array.from(document.querySelectorAll(".service-section, .footer-page"));
 const firstServiceSection = document.querySelector(".service-section");
 
@@ -39,54 +34,15 @@ const architectureWords = [
   "المعمار",
 ];
 
-let scrollLockY = 0;
-let autoEnterQueued = false;
-let entryRequested = false;
-let entered = false;
-let highlightInitialized = false;
 let scrollEffectsInitialized = false;
+let scrollTween = null;
+let wheelDeltaAccumulator = 0;
+let touchStartY = null;
+let touchGestureHandled = false;
+let snapSettleTimeout = null;
 let architectureWordIndex = 0;
 let architectureWordTween = null;
 let architectureWordInterval = null;
-let autoEnterTimeout = null;
-let scrollTween = null;
-
-const lockScroll = () => {
-  if (!body) return;
-  scrollLockY = window.scrollY || document.documentElement.scrollTop || 0;
-  body.classList.add(LOCK_CLASS);
-  body.style.position = "fixed";
-  body.style.top = `-${scrollLockY}px`;
-  body.style.left = "0";
-  body.style.right = "0";
-  body.style.width = "100%";
-};
-
-const unlockScroll = () => {
-  if (!body) return;
-  body.classList.remove(LOCK_CLASS);
-  body.style.position = "";
-  body.style.top = "";
-  body.style.left = "";
-  body.style.right = "";
-  body.style.width = "";
-
-  const targetY = scrollLockY;
-  const html = document.documentElement;
-  const previousScrollBehavior = html.style.scrollBehavior;
-  html.style.scrollBehavior = "auto";
-  window.scrollTo(0, targetY);
-  html.style.scrollBehavior = previousScrollBehavior;
-};
-
-const queueAutoEnter = () => {
-  if (autoEnterQueued || entered || entryRequested) return;
-  autoEnterQueued = true;
-  autoEnterTimeout = window.setTimeout(() => {
-    autoEnterTimeout = null;
-    enterManifesto();
-  }, 2500);
-};
 
 const animateWindowScroll = (targetY, durationSeconds) => {
   const startY = window.scrollY || document.documentElement.scrollTop || 0;
@@ -96,6 +52,10 @@ const animateWindowScroll = (targetY, durationSeconds) => {
   const previousScrollBehavior = html.style.scrollBehavior;
   html.style.scrollBehavior = "auto";
 
+  if (snapSettleTimeout) {
+    window.clearTimeout(snapSettleTimeout);
+    snapSettleTimeout = null;
+  }
   scrollTween?.kill();
   scrollTween = gsap.to(window, {
     scrollTo: { y: targetY, autoKill: false },
@@ -113,25 +73,25 @@ const animateWindowScroll = (targetY, durationSeconds) => {
   });
 };
 
-const findNextSection = (fromSection) => {
-  let candidate = fromSection?.nextElementSibling || null;
-  while (candidate) {
-    if (candidate.matches?.(".service-section, .footer-page")) {
-      return candidate;
-    }
-    candidate = candidate.nextElementSibling;
+const getCurrentScrollY = () => window.scrollY || document.documentElement.scrollTop || 0;
+
+const isEditableTarget = (target) =>
+  target instanceof HTMLElement &&
+  (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(target.tagName));
+
+const getSectionTargetY = (targetSection) => {
+  if (!(targetSection instanceof HTMLElement)) return null;
+
+  if (targetSection === introSection) {
+    return 0;
   }
-  return null;
-};
 
-const scrollToSection = (targetSection, durationSeconds = 1.6) => {
-  if (!(targetSection instanceof HTMLElement) || body.classList.contains(LOCK_CLASS)) return;
-
-  const pageY = window.scrollY || document.documentElement.scrollTop || 0;
+  const pageY = getCurrentScrollY();
   const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
   const headerOffset = header instanceof HTMLElement ? header.getBoundingClientRect().height + 24 : 24;
   const topPadding = headerOffset + 10;
   const bottomPadding = 18;
+  const ctaBottomViewportPadding = 14;
 
   const sectionTitle = targetSection.querySelector(".film-title");
   const primaryCopy =
@@ -147,19 +107,153 @@ const scrollToSection = (targetSection, durationSeconds = 1.6) => {
   const viewportBottomAtTopAnchor = topAnchorTopY - topPadding + window.innerHeight - bottomPadding;
   let targetY = topAnchorTopY - topPadding;
 
-  // If the full content block fits, keep title visible and shift slightly up to keep CTA in view too.
   if (blockBottomY <= viewportBottomAtTopAnchor) {
     const extraSpace = viewportBottomAtTopAnchor - blockBottomY;
     targetY -= Math.min(extraSpace * 0.3, 18);
   }
 
-  const clampedTargetY = Math.min(maxY, Math.max(0, targetY));
-  animateWindowScroll(clampedTargetY, durationSeconds);
+  if (nextCta instanceof HTMLElement) {
+    const ctaBottomAtTarget = ctaBottomY - targetY;
+    const maxCtaBottom = window.innerHeight - ctaBottomViewportPadding;
+    if (ctaBottomAtTarget > maxCtaBottom) {
+      targetY += ctaBottomAtTarget - maxCtaBottom;
+    }
+  }
+
+  return Math.min(maxY, Math.max(0, targetY));
+};
+
+const navigableSections = [introSection, ...revealSections].filter((section) => section instanceof HTMLElement);
+
+const getClosestSectionIndex = () => {
+  const currentY = getCurrentScrollY();
+  let closestIndex = 0;
+  let closestDistance = Number.POSITIVE_INFINITY;
+
+  navigableSections.forEach((section, index) => {
+    const targetY = getSectionTargetY(section);
+    if (typeof targetY !== "number") return;
+    const distance = Math.abs(targetY - currentY);
+    if (distance < closestDistance) {
+      closestDistance = distance;
+      closestIndex = index;
+    }
+  });
+
+  return closestIndex;
+};
+
+const scrollToSectionIndex = (sectionIndex, durationSeconds = 1.1) => {
+  if (body.classList.contains(LOCK_CLASS) || scrollTween || !navigableSections.length) return;
+  const clampedIndex = Math.max(0, Math.min(navigableSections.length - 1, sectionIndex));
+  scrollToSection(navigableSections[clampedIndex], durationSeconds);
+};
+
+const stepSection = (direction, durationSeconds = 1.1) => {
+  if (!Number.isFinite(direction) || direction === 0 || !navigableSections.length) return;
+  const currentIndex = getClosestSectionIndex();
+  const nextIndex = Math.max(0, Math.min(navigableSections.length - 1, currentIndex + direction));
+  if (nextIndex === currentIndex) return;
+  scrollToSectionIndex(nextIndex, durationSeconds);
+};
+
+const handleWheelSectionSnap = (event) => {
+  if (body.classList.contains(LOCK_CLASS)) return;
+  if (Math.abs(event.deltaY) < 1) return;
+  event.preventDefault();
+  event.stopPropagation();
+  if (scrollTween) return;
+
+  wheelDeltaAccumulator += event.deltaY;
+  if (Math.abs(wheelDeltaAccumulator) < 22) return;
+  const direction = wheelDeltaAccumulator > 0 ? 1 : -1;
+  wheelDeltaAccumulator = 0;
+  stepSection(direction, 1.05);
+};
+
+const handleTouchStartSectionSnap = (event) => {
+  if (!event.touches.length) return;
+  touchStartY = event.touches[0].clientY;
+  touchGestureHandled = false;
+};
+
+const handleTouchMoveSectionSnap = (event) => {
+  if (body.classList.contains(LOCK_CLASS)) return;
+  if (!event.touches.length || touchStartY === null) return;
+
+  const currentY = event.touches[0].clientY;
+  const deltaY = touchStartY - currentY;
+
+  event.preventDefault();
+  event.stopPropagation();
+  if (touchGestureHandled || scrollTween || Math.abs(deltaY) < 28) return;
+
+  touchGestureHandled = true;
+  stepSection(deltaY > 0 ? 1 : -1, 1.05);
+};
+
+const handleTouchEndSectionSnap = () => {
+  touchStartY = null;
+  touchGestureHandled = false;
+};
+
+const handleKeydownSectionSnap = (event) => {
+  if (body.classList.contains(LOCK_CLASS)) return;
+  if (isEditableTarget(event.target)) return;
+  if (scrollTween) {
+    event.preventDefault();
+    return;
+  }
+
+  const key = event.key;
+  const isDown = key === "ArrowDown" || key === "PageDown" || key === "End" || (key === " " && !event.shiftKey);
+  const isUp = key === "ArrowUp" || key === "PageUp" || key === "Home" || (key === " " && event.shiftKey);
+  if (!isDown && !isUp) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+  stepSection(isDown ? 1 : -1, 1.05);
+};
+
+const scheduleSnapToClosestSection = () => {
+  if (body.classList.contains(LOCK_CLASS) || scrollTween || !navigableSections.length) return;
+  if (snapSettleTimeout) {
+    window.clearTimeout(snapSettleTimeout);
+  }
+  snapSettleTimeout = window.setTimeout(() => {
+    snapSettleTimeout = null;
+    if (scrollTween || body.classList.contains(LOCK_CLASS)) return;
+    scrollToSectionIndex(getClosestSectionIndex(), 0.7);
+  }, 120);
+};
+
+const findNextSection = (fromSection) => {
+  let candidate = fromSection?.nextElementSibling || null;
+  while (candidate) {
+    if (candidate.matches?.(".service-section, .footer-page")) {
+      return candidate;
+    }
+    candidate = candidate.nextElementSibling;
+  }
+  return null;
+};
+
+const scrollToSection = (targetSection, durationSeconds = 1.6) => {
+  if (!(targetSection instanceof HTMLElement) || body.classList.contains(LOCK_CLASS)) return;
+  const targetY = getSectionTargetY(targetSection);
+  if (typeof targetY !== "number") return;
+  animateWindowScroll(targetY, durationSeconds);
 };
 
 const scrollToFirstService = () => {
-  if (!(firstServiceSection instanceof HTMLElement) || !entered || body.classList.contains(LOCK_CLASS)) return;
+  if (!(firstServiceSection instanceof HTMLElement) || body.classList.contains(LOCK_CLASS)) return;
   scrollToSection(firstServiceSection, 1.6);
+};
+
+const removePhotoNote = () => {
+  const photoNote = document.querySelector(".photo-section .film-copy-note");
+  if (!(photoNote instanceof HTMLElement)) return;
+  photoNote.remove();
 };
 
 const setArchitectureWord = (nextWord) => {
@@ -190,6 +284,7 @@ const setArchitectureWord = (nextWord) => {
 
 const initArchitectureWordCycle = () => {
   if (!architectureWordEl || architectureWords.length < 2) return;
+  architectureWordInterval && window.clearInterval(architectureWordInterval);
   architectureWordIndex = 0;
   architectureWordEl.textContent = architectureWords[architectureWordIndex];
   gsap.set(architectureWordEl, { autoAlpha: 1, y: 0 });
@@ -207,60 +302,6 @@ const stopArchitectureWordCycle = () => {
   }
   architectureWordTween?.kill();
   architectureWordTween = null;
-};
-
-const measureTitleMorph = () => {
-  if (!(heroTitle instanceof HTMLElement) || !(manifestoTitle instanceof HTMLElement)) {
-    return null;
-  }
-
-  let restore = null;
-  if (manifesto) {
-    restore = {
-      y: Number(gsap.getProperty(manifesto, "y")) || 0,
-      scale: Number(gsap.getProperty(manifesto, "scale")) || 1,
-    };
-    gsap.set(manifesto, { y: 0, scale: 1 });
-  }
-
-  const heroRect = heroTitle.getBoundingClientRect();
-  const targetRect = manifestoTitle.getBoundingClientRect();
-
-  if (manifesto && restore) {
-    gsap.set(manifesto, restore);
-  }
-
-  const heroCenterX = heroRect.left + heroRect.width * 0.5;
-  const heroCenterY = heroRect.top + heroRect.height * 0.5;
-  const targetCenterX = targetRect.left + targetRect.width * 0.5;
-  const targetCenterY = targetRect.top + targetRect.height * 0.5;
-  const scaleFromHeight = heroRect.height > 0 ? targetRect.height / heroRect.height : 1;
-  const scaleFromWidth = heroRect.width > 0 ? targetRect.width / heroRect.width : 1;
-  const scale = Math.min(scaleFromHeight, scaleFromWidth);
-
-  return {
-    x: targetCenterX - heroCenterX,
-    y: targetCenterY - heroCenterY,
-    scale: Number(scale.toFixed(4)),
-  };
-};
-
-const initHighlightAnimation = () => {
-  if (highlightInitialized || !highlightLine) return;
-  highlightInitialized = true;
-
-  gsap.set(highlightLine, { "--line-fill": "0%" });
-  gsap.to(highlightLine, {
-    "--line-fill": "100%",
-    ease: "none",
-    scrollTrigger: {
-      trigger: introSection || highlightLine,
-      start: "top top",
-      end: "+=220",
-      scrub: true,
-      invalidateOnRefresh: true,
-    },
-  });
 };
 
 const initScrollSectionEffects = () => {
@@ -334,175 +375,51 @@ const initScrollSectionEffects = () => {
   });
 };
 
-const enterManifesto = () => {
-  if (entered || entryRequested) return;
-  entryRequested = true;
-  if (autoEnterTimeout) {
-    window.clearTimeout(autoEnterTimeout);
-    autoEnterTimeout = null;
-  }
-
-  const ctaExitDuration = 0.38 * motionFactor;
-  const titleMorphDuration = 1.62 * motionFactor;
-  const contentRevealDuration = 1.6 * motionFactor;
-  const headerRevealDuration = 0.42 * motionFactor;
-  const titleMorph = measureTitleMorph();
-  const bodyRevealStart = titleMorph
-    ? titleMorphDuration + 0.04 * motionFactor
-    : 0.18 * motionFactor;
-  const headerRevealStart = Math.max(
-    bodyRevealStart,
-    bodyRevealStart + contentRevealDuration - headerRevealDuration * 1.05,
-  );
-
-  const tl = gsap.timeline({
-    defaults: { ease: "power2.out" },
-    onComplete: () => {
-      entered = true;
-      unlockScroll();
-      if (scrollDownCta) {
-        gsap.set(scrollDownCta, { pointerEvents: "auto" });
-      }
-      initHighlightAnimation();
-      initScrollSectionEffects();
-      ScrollTrigger.refresh();
-
-      const focusTarget = manifesto?.querySelector(".manifesto-block p");
-      if (focusTarget instanceof HTMLElement) {
-        focusTarget.setAttribute("tabindex", "-1");
-        focusTarget.focus({ preventScroll: true });
-        focusTarget.removeAttribute("tabindex");
-      }
-    },
-  });
-
-  if (enterCta) {
-    tl.to(
-      enterCta,
-      {
-        autoAlpha: 0,
-        y: -10,
-        duration: ctaExitDuration,
-      },
-      0,
-    );
-  }
-
-  if (titleMorph && heroTitle) {
-    tl.to(
-      heroTitle,
-      {
-        x: titleMorph.x,
-        y: titleMorph.y,
-        scale: titleMorph.scale,
-        autoAlpha: 1,
-        ease: "power2.inOut",
-        duration: titleMorphDuration,
-      },
-      0,
-    );
-    tl.set(
-      heroTitle,
-      {
-        pointerEvents: "none",
-        cursor: "default",
-      },
-      titleMorphDuration,
-    );
-  } else if (heroTitle) {
-    tl.to(
-      heroTitle,
-      {
-        autoAlpha: 0,
-        duration: 0.45 * motionFactor,
-      },
-      0,
-    );
-  }
-
-  if (manifesto) {
-    tl.set(
-      manifesto,
-      {
-        autoAlpha: 1,
-        pointerEvents: "auto",
-      },
-      bodyRevealStart,
-    );
-  }
-
-  if (manifestoSecondary.length) {
-    tl.to(
-      manifestoSecondary,
-      {
-        autoAlpha: 1,
-        y: 0,
-        duration: contentRevealDuration,
-        stagger: 0.03,
-      },
-      bodyRevealStart + 0.02 * motionFactor,
-    );
-  }
-
-  if (scrollDownCta) {
-    tl.to(
-      scrollDownCta,
-      {
-        autoAlpha: 1,
-        y: 0,
-        duration: 0.46 * motionFactor,
-      },
-      bodyRevealStart + contentRevealDuration * 0.72,
-    );
-  }
-
-  if (header) {
-    tl.to(
-      header,
-      {
-        autoAlpha: 1,
-        y: 0,
-        pointerEvents: "auto",
-        duration: headerRevealDuration,
-        overwrite: true,
-      },
-      headerRevealStart,
-    );
-  }
-};
-
-if (!body || !introSection || !heroTitle || !manifesto) {
+if (!body || !introSection || !manifesto) {
   // No-op when required intro elements are missing.
 } else {
   window.scrollTo(0, 0);
-  scrollLockY = 0;
-  lockScroll();
+  wheelDeltaAccumulator = 0;
+  removePhotoNote();
 
   gsap.set(manifesto, {
-    autoAlpha: 0,
-    pointerEvents: "none",
+    autoAlpha: 1,
+    pointerEvents: "auto",
   });
   if (manifestoSecondary.length) {
-    gsap.set(manifestoSecondary, { autoAlpha: 0, y: 24 });
+    gsap.set(manifestoSecondary, { autoAlpha: 1, y: 0 });
   }
-  gsap.set(heroTitle, { autoAlpha: 1, x: 0, y: 0, scale: 1, transformOrigin: "50% 50%" });
-  if (enterCta) {
-    gsap.set(enterCta, { autoAlpha: 0, y: 16 });
-  }
-  if (scrollDownCta) {
-    gsap.set(scrollDownCta, { autoAlpha: 0, y: 10, pointerEvents: "none" });
+  if (heroTitle) {
+    gsap.set(heroTitle, {
+      autoAlpha: 1,
+      xPercent: -50,
+      yPercent: -50,
+      x: 0,
+      y: 0,
+      scale: 0.85,
+      transformOrigin: "50% 50%",
+      pointerEvents: "none",
+      cursor: "default",
+    });
   }
   initArchitectureWordCycle();
-
-  if (header) {
-    gsap.set(header, { autoAlpha: 0, y: -12, pointerEvents: "none" });
+  if (scrollDownCta) {
+    gsap.set(scrollDownCta, { autoAlpha: 1, y: 0, pointerEvents: "auto" });
   }
+  if (header) {
+    gsap.set(header, { autoAlpha: 1, y: 0, pointerEvents: "auto" });
+  }
+  initScrollSectionEffects();
+  ScrollTrigger.refresh();
 
-  window.addEventListener("load", queueAutoEnter, { once: true });
-  setTimeout(queueAutoEnter, 900);
+  window.addEventListener("scroll", scheduleSnapToClosestSection, { passive: true });
+  window.addEventListener("wheel", handleWheelSectionSnap, { passive: false });
+  window.addEventListener("touchstart", handleTouchStartSectionSnap, { passive: true });
+  window.addEventListener("touchmove", handleTouchMoveSectionSnap, { passive: false });
+  window.addEventListener("touchend", handleTouchEndSectionSnap, { passive: true });
+  window.addEventListener("keydown", handleKeydownSectionSnap);
+  window.addEventListener("beforeunload", stopArchitectureWordCycle, { once: true });
 
-  enterCta?.addEventListener("click", enterManifesto);
-  introTextTrigger?.addEventListener("click", enterManifesto);
   scrollDownCta?.addEventListener("click", (event) => {
     event.preventDefault();
     event.stopPropagation();
@@ -512,7 +429,6 @@ if (!body || !introSection || !heroTitle || !manifesto) {
     cta.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
-      if (!entered) return;
       const currentSection = cta.closest(".service-section");
       if (!(currentSection instanceof HTMLElement)) return;
       const nextSection = findNextSection(currentSection);

@@ -34,18 +34,19 @@ const structuredData = {
     <meta name="twitter:description" content={pageDescription} />
     <meta name="twitter:image" content={ogImage} />
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
+    <script is:inline>
+      (() => {
+        try {
+          if (window.sessionStorage.getItem("urbanoise:page-transition-entry") === "1") {
+            document.documentElement.classList.add("page-transition-entry");
+          }
+        } catch (_error) {}
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=tanker@400&display=swap"
       rel="stylesheet"
     />
     <link
@@ -199,14 +200,14 @@ const structuredData = {
       }
 
       .about-us-body .post-article {
-        width: min(80%, 1400px);
+        width: min(72%, 1260px);
         margin: 0 auto;
         background: transparent;
         border-radius: 0;
         box-shadow: none;
         padding: 0;
         display: grid;
-        grid-template-columns: minmax(0, 1fr) clamp(260px, 28vw, 520px);
+        grid-template-columns: minmax(0, 1fr) clamp(234px, 25.2vw, 468px);
         gap: clamp(1rem, 2vw, 2.25rem);
         align-items: center;
       }
@@ -214,14 +215,14 @@ const structuredData = {
       .about-us-body .about-us-copy {
         min-width: 0;
         text-align: left;
-        width: min(100%, 72ch);
+        width: min(100%, 61ch);
         justify-self: end;
       }
 
       .about-us-body .about-us-photo-wrap {
         margin: 0;
         width: 100%;
-        max-width: clamp(260px, 28vw, 520px);
+        max-width: clamp(234px, 25.2vw, 468px);
         justify-self: start;
         align-self: center;
       }
@@ -243,19 +244,24 @@ const structuredData = {
 
       .about-us-body .post-content {
         margin: 0;
-        max-width: none;
-        font-size: clamp(0.98rem, 0.4vw + 0.85rem, 1.2rem);
-        line-height: 1.55;
+        max-width: 58ch;
+        font-size: clamp(0.88rem, 0.36vw + 0.76rem, 1.08rem);
+        line-height: 1.58;
+        text-wrap: pretty;
       }
 
       .about-us-body .post-content p {
         margin: 0 0 clamp(0.8rem, 1.3vw, 1.1rem);
+        max-width: 56ch;
+        text-align: left;
+        hyphens: none;
       }
 
       .about-us-body .post-title {
-        font-size: clamp(1.75rem, 1.3vw + 1rem, 3.35rem);
+        font-size: clamp(1.58rem, 1.17vw + 0.9rem, 3.02rem);
         line-height: 1.12;
-        margin: 0 0 clamp(1rem, 1.8vw, 1.4rem);
+        margin: 0 0 clamp(0.9rem, 1.62vw, 1.26rem);
+        text-wrap: balance;
       }
 
       @media (max-width: 768px) {
@@ -264,9 +270,9 @@ const structuredData = {
         }
 
         .about-us-body .post-article {
-          width: 80%;
+          width: 72%;
           grid-template-columns: 1fr;
-          gap: 1.5rem;
+          gap: 1.35rem;
         }
 
         .about-us-body .about-us-copy {
@@ -274,9 +280,25 @@ const structuredData = {
           justify-self: stretch;
         }
 
+        .about-us-body .post-content {
+          max-width: none;
+        }
+
+        .about-us-body .post-content p {
+          max-width: none;
+          text-align: left;
+        }
+
         .about-us-body .about-us-photo-wrap {
-          max-width: 320px;
+          width: min(100%, 288px);
+          max-width: 288px;
           justify-self: center;
+          margin-inline: auto;
+          display: block;
+        }
+
+        .about-us-body .about-us-photo {
+          margin-inline: auto;
         }
       }
     </style>
