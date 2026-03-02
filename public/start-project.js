@@ -79,6 +79,9 @@ const isEditableTarget = (target) =>
   target instanceof HTMLElement &&
   (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(target.tagName));
 
+const LARGE_MONITOR_QUERY = "(min-width: 2200px)";
+const isLargeMonitorViewport = () => window.matchMedia(LARGE_MONITOR_QUERY).matches;
+
 const getSectionTargetY = (targetSection) => {
   if (!(targetSection instanceof HTMLElement)) return null;
 
@@ -89,9 +92,11 @@ const getSectionTargetY = (targetSection) => {
   const pageY = getCurrentScrollY();
   const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
   const headerOffset = header instanceof HTMLElement ? header.getBoundingClientRect().height + 24 : 24;
-  const topPadding = headerOffset + 10;
-  const bottomPadding = 18;
-  const ctaBottomViewportPadding = 14;
+  const isLargeMonitor = isLargeMonitorViewport();
+  const topPadding = isLargeMonitor ? headerOffset + 170 : headerOffset + 10;
+  const bottomPadding = isLargeMonitor ? 34 : 18;
+  const ctaBottomViewportPadding = isLargeMonitor ? 32 : 14;
+  const maxAutoPullUp = isLargeMonitor ? 0 : 18;
 
   const sectionTitle = targetSection.querySelector(".film-title");
   const primaryCopy =
@@ -109,7 +114,7 @@ const getSectionTargetY = (targetSection) => {
 
   if (blockBottomY <= viewportBottomAtTopAnchor) {
     const extraSpace = viewportBottomAtTopAnchor - blockBottomY;
-    targetY -= Math.min(extraSpace * 0.3, 18);
+    targetY -= Math.min(extraSpace * 0.3, maxAutoPullUp);
   }
 
   if (nextCta instanceof HTMLElement) {

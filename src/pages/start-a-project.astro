@@ -306,7 +306,7 @@ const structuredData = {
     </main>
     <script type="module" src="/nav-menu.js"></script>
     <script type="module" src="/page-transition.js"></script>
-    <script type="module" src="/start-project.js?v=20260218-intro-fix-26"></script>
+    <script type="module" src="/start-project.js?v=20260302-large-screen-layout-01"></script>
     <style>
       .start-project-body {
         background: var(--pantone-8245c);
@@ -755,6 +755,20 @@ const structuredData = {
 
       .start-project-body .consultation-note {
         margin-top: clamp(2rem, 3.5vh, 2.9rem) !important;
+      }
+
+      @media (min-width: 2200px) {
+        .start-project-body .manifesto-title + .manifesto-block {
+          margin-top: calc(clamp(2.95rem, 5.2vh, 3.85rem) - 180px);
+        }
+
+        .start-project-body .film-section {
+          padding-top: calc(clamp(11rem, 19.2vh, 13.8rem) + 40px);
+        }
+
+        .start-project-body .film-section:not(.photo-section) {
+          padding-top: calc(clamp(9.35rem, 16.3vh, 11.7rem) + 40px);
+        }
       }
 
       @media (max-width: 768px) {
