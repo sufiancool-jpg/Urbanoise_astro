@@ -84,33 +84,40 @@ const structuredData = {
     </header>
 
     <main class="post-page">
-      <article class="post-article">
-        <div class="about-us-copy">
-          <h1 class="post-title">About Urbanoise</h1>
-          <div class="post-content">
-            <p>
-              URBANOISE is a production company founded by director/cinematographer Sufian Ararah and photographer and
-              architect Rokas Jankus in 2026, dedicated to architectural documentaries in film and photography.
-            </p>
-            <p>
-              At the core of our practice lies observation rather than staging. We document processes, uses, transitions
-              and atmospheres as they unfold, allowing architecture to be understood within its real context.
-            </p>
-            <p>
-              URBANOISE stands for a documentary and artistic engagement with architecture and urban space. Works that
-              aim not at attention, but at understanding.
-            </p>
+      <article
+        class="post-article"
+        style="--about-column-width:min(100%,61ch);display:flex;flex-direction:column;align-items:center;gap:clamp(1rem,2vw,2.25rem);width:min(72%,1260px);margin:0 auto;padding:0;background:transparent;border-radius:0;box-shadow:none;"
+      >
+        <div class="about-us-swap" data-about-swap style="inline-size:var(--about-column-width);max-inline-size:100%;margin-inline:auto;">
+          <figure class="about-us-photo-wrap" data-about-photo style="margin:0;inline-size:100%;max-inline-size:100%;align-self:center;">
+            <img
+              class="about-us-photo"
+              src="/Photos/us2.JPG"
+              alt="Urbanoise founders portrait"
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
+          <p class="about-us-hover-cta" aria-hidden="true">Hover for more</p>
+          <div class="about-us-copy" data-about-copy style="inline-size:100%;max-inline-size:100%;margin-inline:auto;text-align:left;">
+            <h1 class="post-title">About Urbanoise</h1>
+            <div class="post-content">
+              <p>
+                URBANOISE is a production company founded in 2026 by director and cinematographer Sufian Ararah and
+                photographer and architect Rokas Jankus, dedicated to architectural documentaries across film and
+                photography.
+              </p>
+              <p>
+                At the core of our practice lies observation rather than staging. We document processes, uses, transitions
+                and atmospheres as they unfold, allowing architecture to be understood within its real context.
+              </p>
+              <p>
+                URBANOISE stands for a documentary and artistic engagement with architecture and urban space. Works that
+                aim not at attention, but at understanding.
+              </p>
+            </div>
           </div>
         </div>
-        <figure class="about-us-photo-wrap">
-          <img
-            class="about-us-photo"
-            src="/Photos/us2.JPG"
-            alt="Urbanoise founders portrait"
-            loading="lazy"
-            decoding="async"
-          />
-        </figure>
       </article>
     </main>
 
@@ -193,10 +200,26 @@ const structuredData = {
     </section>
     <script type="module" src="/nav-menu.js"></script>
     <script type="module" src="/page-transition.js"></script>
-    <style>
+    <script type="module" src="/about-us.js"></script>
+    <style is:global>
+      body.about-us-body .post-page > .post-article {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+      }
+
+      body.about-us-body .post-page > .post-article > .about-us-swap > .about-us-photo-wrap,
+      body.about-us-body .post-page > .post-article > .about-us-swap > .about-us-copy {
+        grid-column: auto !important;
+        grid-row: auto !important;
+        justify-self: center !important;
+        align-self: center !important;
+      }
+
       .about-us-body .post-page {
         justify-content: center;
-        padding: clamp(6rem, 12vh, 8rem) 2.25rem 6rem;
+        min-height: auto;
+        padding: clamp(5rem, 9vh, 6.25rem) 2.25rem clamp(2rem, 4vh, 3rem);
       }
 
       .about-us-body .post-article {
@@ -206,25 +229,79 @@ const structuredData = {
         border-radius: 0;
         box-shadow: none;
         padding: 0;
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) clamp(234px, 25.2vw, 468px);
-        gap: clamp(1rem, 2vw, 2.25rem);
+        display: flex;
+        flex-direction: column;
         align-items: center;
+        gap: clamp(1rem, 2vw, 2.25rem);
       }
 
       .about-us-body .about-us-copy {
         min-width: 0;
         text-align: left;
-        width: min(100%, 61ch);
-        justify-self: end;
+        width: 100%;
+        max-width: 100%;
+        justify-self: stretch;
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        padding: clamp(0.9rem, 1.2vw, 1.35rem);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
       }
 
       .about-us-body .about-us-photo-wrap {
         margin: 0;
         width: 100%;
-        max-width: clamp(234px, 25.2vw, 468px);
-        justify-self: start;
+        max-width: 100%;
         align-self: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .about-us-body .about-us-swap {
+        position: relative;
+        width: var(--about-column-width);
+        max-width: 100%;
+        overflow: hidden;
+      }
+
+      .about-us-body .about-us-hover-cta {
+        position: absolute;
+        right: clamp(0.6rem, 1vw, 0.9rem);
+        bottom: clamp(0.6rem, 1vw, 0.9rem);
+        margin: 0;
+        padding: 0.28rem 0.52rem;
+        font-family: var(--font-head);
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #fff;
+        background: rgb(0 0 0 / 38%);
+        border: 1px solid rgb(255 255 255 / 42%);
+        z-index: 3;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+      }
+
+      .about-us-body .about-us-swap:hover .about-us-hover-cta,
+      .about-us-body .about-us-swap:focus-within .about-us-hover-cta,
+      .about-us-body .about-us-swap.is-revealed .about-us-hover-cta {
+        opacity: 0;
+      }
+
+      .about-us-body .footer-page {
+        min-height: auto;
+        max-height: none;
+        padding: clamp(1.25rem, 2.2vw, 2rem) 1rem;
+      }
+
+      .about-us-body .footer-inner {
+        gap: 1rem;
+        padding: clamp(0.9rem, 1.8vw, 1.35rem);
       }
 
       .about-us-body .about-us-photo {
@@ -244,17 +321,19 @@ const structuredData = {
 
       .about-us-body .post-content {
         margin: 0;
-        max-width: 58ch;
+        max-width: 54ch;
         font-size: clamp(0.88rem, 0.36vw + 0.76rem, 1.08rem);
-        line-height: 1.58;
+        line-height: 1.62;
         text-wrap: pretty;
       }
 
       .about-us-body .post-content p {
         margin: 0 0 clamp(0.8rem, 1.3vw, 1.1rem);
-        max-width: 56ch;
+        width: 100%;
+        max-width: none;
         text-align: left;
         hyphens: none;
+        text-wrap: pretty;
       }
 
       .about-us-body .post-title {
@@ -266,18 +345,24 @@ const structuredData = {
 
       @media (max-width: 768px) {
         .about-us-body .post-page {
-          padding: clamp(6rem, 12vh, 8rem) 1.5rem 6rem;
+          padding: clamp(4rem, 7vh, 4.8rem) 1.5rem clamp(0.75rem, 2vh, 1.25rem);
         }
 
         .about-us-body .post-article {
           width: 72%;
-          grid-template-columns: 1fr;
           gap: 1.35rem;
         }
 
         .about-us-body .about-us-copy {
           width: 100%;
           justify-self: stretch;
+          position: absolute;
+          inset: 0;
+          opacity: 0;
+          visibility: hidden;
+          pointer-events: none;
+          padding: clamp(0.7rem, 1.8vw, 1rem);
+          overflow: auto;
         }
 
         .about-us-body .post-content {
@@ -290,15 +375,24 @@ const structuredData = {
         }
 
         .about-us-body .about-us-photo-wrap {
-          width: min(100%, 288px);
-          max-width: 288px;
+          width: 100%;
+          max-width: 100%;
           justify-self: center;
           margin-inline: auto;
           display: block;
+          position: relative;
         }
 
         .about-us-body .about-us-photo {
           margin-inline: auto;
+        }
+
+        .about-us-body .about-us-hover-cta {
+          display: block;
+        }
+
+        .about-us-body .footer-page {
+          padding: 0.75rem 1rem 1rem;
         }
       }
     </style>
