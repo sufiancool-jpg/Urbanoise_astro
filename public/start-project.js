@@ -46,7 +46,7 @@ let architectureWordTween = null;
 let architectureWordInterval = null;
 
 const trackConsultationClick = (linkElement, index, eventCallback) => {
-  const linkText = linkElement?.textContent?.trim() || "Book a consultation";
+  const linkText = linkElement?.textContent?.trim() || "Reach out";
   if (typeof window.gtag !== "function") {
     eventCallback?.();
     return;
