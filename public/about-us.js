@@ -5,6 +5,7 @@ const photo = swap?.querySelector("[data-about-photo]");
 const copy = swap?.querySelector("[data-about-copy]");
 const cta = swap?.querySelector(".about-us-hover-cta");
 const hoverCapableQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+const compactViewportQuery = window.matchMedia("(max-width: 900px)");
 
 if (!swap || !photo || !copy) {
   // No-op when markup is absent.
@@ -14,21 +15,29 @@ if (!swap || !photo || !copy) {
   let isBound = false;
   let isTouchBound = false;
   let isRevealed = false;
+  const shouldUseTouchMode = () => !hoverCapableQuery.matches;
+  const shouldExpandInHoverMode = () => hoverCapableQuery.matches && compactViewportQuery.matches;
 
   const getPhotoHeight = () => photo.getBoundingClientRect().height;
   const getCopyHeight = () => Math.ceil(copy.scrollHeight);
-  const getExpandedHeight = () => Math.max(getPhotoHeight(), getCopyHeight());
+  const getExpandedHeight = () => Math.max(getPhotoHeight(), getCopyHeight() + 8);
 
   const revealText = () => {
     activeTween?.kill();
 
     if (prefersReducedMotionQuery.matches) {
+      if (shouldExpandInHoverMode()) {
+        gsap.set(swap, { height: getExpandedHeight() });
+      }
       gsap.set(photo, { autoAlpha: 0 });
       gsap.set(copy, { autoAlpha: 1 });
       return;
     }
 
     activeTween = gsap.timeline({ defaults: { duration: 0.45, ease: "power2.out" } });
+    if (shouldExpandInHoverMode()) {
+      activeTween.to(swap, { height: getExpandedHeight(), duration: 0.35 }, 0);
+    }
     activeTween.to(photo, { autoAlpha: 0 }, 0).to(copy, { autoAlpha: 1 }, 0);
   };
 
@@ -36,12 +45,22 @@ if (!swap || !photo || !copy) {
     activeTween?.kill();
 
     if (prefersReducedMotionQuery.matches) {
+      if (shouldExpandInHoverMode()) {
+        gsap.set(swap, { height: getPhotoHeight() });
+      } else {
+        gsap.set(swap, { clearProps: "height" });
+      }
       gsap.set(photo, { autoAlpha: 1 });
       gsap.set(copy, { autoAlpha: 0 });
       return;
     }
 
     activeTween = gsap.timeline({ defaults: { duration: 0.45, ease: "power2.out" } });
+    if (shouldExpandInHoverMode()) {
+      activeTween.to(swap, { height: getPhotoHeight(), duration: 0.35 }, 0);
+    } else {
+      activeTween.set(swap, { clearProps: "height" }, 0);
+    }
     activeTween.to(photo, { autoAlpha: 1 }, 0).to(copy, { autoAlpha: 0 }, 0);
   };
 
@@ -127,13 +146,17 @@ if (!swap || !photo || !copy) {
   const syncMode = () => {
     activeTween?.kill();
 
-    if (hoverCapableQuery.matches) {
+    if (!shouldUseTouchMode()) {
       unbindTouchEvents();
       swap.classList.remove("is-touch");
       if (cta) {
         cta.textContent = "Hover to reveal";
       }
-      gsap.set(swap, { clearProps: "height" });
+      if (shouldExpandInHoverMode()) {
+        gsap.set(swap, { height: getPhotoHeight() });
+      } else {
+        gsap.set(swap, { clearProps: "height" });
+      }
       gsap.set(photo, { autoAlpha: 1 });
       gsap.set(copy, { autoAlpha: 0 });
       bindEvents();
@@ -151,18 +174,28 @@ if (!swap || !photo || !copy) {
 
   syncMode();
   window.addEventListener("resize", () => {
-    if (hoverCapableQuery.matches) {
+    if (shouldUseTouchMode()) {
+      if (isRevealed) {
+        gsap.set(swap, { height: getExpandedHeight() });
+        return;
+      }
+      gsap.set(swap, { height: getPhotoHeight() });
       return;
     }
-    if (isRevealed) {
-      gsap.set(swap, { height: getExpandedHeight() });
+
+    if (!shouldExpandInHoverMode()) {
+      gsap.set(swap, { clearProps: "height" });
       return;
     }
-    gsap.set(swap, { height: getPhotoHeight() });
+
+    const hovering = swap.matches(":hover") || swap.matches(":focus-within");
+    gsap.set(swap, { height: hovering ? getExpandedHeight() : getPhotoHeight() });
   });
   if (typeof hoverCapableQuery.addEventListener === "function") {
     hoverCapableQuery.addEventListener("change", syncMode);
+    compactViewportQuery.addEventListener("change", syncMode);
   } else if (typeof hoverCapableQuery.addListener === "function") {
     hoverCapableQuery.addListener(syncMode);
+    compactViewportQuery.addListener(syncMode);
   }
 }

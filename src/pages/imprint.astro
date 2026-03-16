@@ -1,0 +1,148 @@
+---
+import GoogleTag from "../components/GoogleTag.astro";
+
+const siteUrl = "https://urbanoise.com";
+const pageTitle = "Imprint | Urbanoise";
+const pageDescription = "Legal notice and provider information for Urbanoise.";
+const canonicalUrl = new URL("/imprint", siteUrl).href;
+const ogImage = `${siteUrl}/Opengraph.jpg`;
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: pageTitle,
+  url: canonicalUrl,
+  description: pageDescription,
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="description" content={pageDescription} />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="Urbanoise" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={ogImage} />
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
+    <script is:inline>
+      (() => {
+        try {
+          if (window.sessionStorage.getItem("urbanoise:page-transition-entry") === "1") {
+            document.documentElement.classList.add("page-transition-entry");
+          }
+        } catch (_error) {}
+      })();
+    </script>
+    <GoogleTag />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/styles-post.css" />
+  </head>
+  <body class="post-body imprint-body">
+    <div class="page-transition-overlay" aria-hidden="true"></div>
+    <header class="site-header post-header" aria-label="Primary">
+      <div class="site-brand">
+        <a class="site-brand-link" href="/#video">Urbanoise</a>
+      </div>
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="primary-navigation"
+        aria-hidden="true"
+        tabindex="-1"
+        hidden
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span class="sr-only">Toggle menu</span>
+      </button>
+      <nav class="nav-links" id="primary-navigation">
+        <a class="nav-link" href="/#video">Home</a>
+        <a class="nav-link" href="/start-a-project">Start a project</a>
+        <a class="nav-link" href="mailto:hello@urbanoise.studio">Contact</a>
+      </nav>
+    </header>
+    <main class="post-page">
+      <article class="post-article imprint-article">
+        <h1 class="post-title">Imprint (Impressum)</h1>
+        <div class="post-content">
+          <p><strong>Information according to §5 DDG</strong></p>
+          <p>
+            <strong>URBANOISE</strong><br />
+            Architectural Documentary Production<br />
+            Founded by<br />
+            Sufian Ararah & Rokas Jankus<br />
+            Ella-Kay-Str. 10<br />
+            10405 Berlin<br />
+            Germany
+          </p>
+          <p>
+            Email: <a href="mailto:hello@urbanoise.studio">hello@urbanoise.studio</a><br />
+            Website: <a href="https://www.urbanoise.studio" target="_blank" rel="noreferrer noopener">www.urbanoise.studio</a>
+          </p>
+          <p>
+            <strong>Responsible for content according to §18 Abs. 2 MStV</strong><br />
+            Sufian Ararah<br />
+            Ella-Kay-Str. 10<br />
+            10405 Berlin<br />
+            Germany
+          </p>
+          <h2>Activity</h2>
+          <p>
+            URBANOISE is an independent production practice founded by cinematographer Sufian Ararah and
+            photographer and architect Rokas Jankus, dedicated to architectural documentaries in film and photography.
+          </p>
+          <h2>Disclaimer</h2>
+          <p>
+            The contents of our pages were created with the greatest care. However, we cannot guarantee the contents'
+            accuracy, completeness or topicality. As service providers, we are liable for our own content on these
+            pages according to general laws.
+          </p>
+          <h2>Copyright</h2>
+          <p>
+            The content and works created by the site operators on these pages are subject to copyright law.
+            Duplication, processing, distribution or any form of commercialization beyond the scope of copyright law
+            shall require the prior written consent of the respective author or creator.
+          </p>
+        </div>
+      </article>
+    </main>
+    <script type="module" src="/nav-menu.js"></script>
+    <script type="module" src="/page-transition.js"></script>
+    <style is:global>
+      .imprint-body .imprint-article {
+        width: min(860px, 100%);
+      }
+
+      .imprint-body .post-title {
+        letter-spacing: 0.03em;
+      }
+
+      .imprint-body .post-content h2 {
+        margin-top: 1.65rem;
+      }
+    </style>
+  </body>
+</html>

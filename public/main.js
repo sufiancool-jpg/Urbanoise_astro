@@ -8,6 +8,8 @@ window.gsap = gsap;
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const motionFactor = prefersReducedMotion ? 0.75 : 1;
 const phoneMq = window.matchMedia("(max-width: 480px)");
+const networkInfo =
+  navigator.connection || navigator.mozConnection || navigator.webkitConnection || null;
 const initialUrl = new URL(window.location.href);
 const shouldAutoEnterVideo =
   initialUrl.searchParams.get("view") === "video" || initialUrl.hash === "#video";
@@ -34,10 +36,17 @@ const fallback = document.querySelector(".video-fallback");
 const scrollBumper = document.querySelector(".scroll-bumper");
 const heroVideoSourceSets = {
   desktop: [
-    { src: "/Photos/website_1p.webp", type: "video/webp" },
+    { src: "/Photos/website_1_1.mp4", type: "video/mp4" },
+    { src: "/Photos/website_1_1.webm", type: "video/webm" },
+  ],
+  desktopLite: [
+    { src: "/Photos/website_1_1.webm", type: "video/webm" },
     { src: "/Photos/website_1_1.mp4", type: "video/mp4" },
   ],
-  phone: [{ src: "/Photos/website_1phone.mp4", type: "video/mp4" }],
+  mobile: [
+    { src: "/Photos/website_1phone.webm", type: "video/webm" },
+    { src: "/Photos/website_1phone.mp4", type: "video/mp4" },
+  ],
 };
 
 const setHeroVideoSources = (key) => {
@@ -56,18 +65,39 @@ const setHeroVideoSources = (key) => {
   video.load();
 };
 
+const shouldUseLiteHeroVideo = () => {
+  if (prefersReducedMotion) return true;
+  if (!networkInfo) return false;
+
+  const saveData = networkInfo.saveData === true;
+  const effectiveType = String(networkInfo.effectiveType || "").toLowerCase();
+  const downlink = typeof networkInfo.downlink === "number" ? networkInfo.downlink : null;
+  const slowEffectiveType =
+    effectiveType === "slow-2g" || effectiveType === "2g" || effectiveType === "3g";
+  const lowDownlink = downlink !== null && downlink > 0 && downlink < 1.5;
+
+  return saveData || slowEffectiveType || lowDownlink;
+};
+
+const getHeroVideoSourceKey = () => {
+  if (phoneMq.matches) return "mobile";
+  return shouldUseLiteHeroVideo() ? "desktopLite" : "desktop";
+};
+
 const updateHeroVideoSources = () => {
-  const isPhone = Boolean(phoneMq?.matches);
-  setHeroVideoSources(isPhone ? "phone" : "desktop");
+  setHeroVideoSources(getHeroVideoSourceKey());
 };
 
 updateHeroVideoSources();
-if (phoneMq) {
-  if (phoneMq.addEventListener) {
-    phoneMq.addEventListener("change", updateHeroVideoSources);
-  } else if (phoneMq.addListener) {
-    phoneMq.addListener(updateHeroVideoSources);
-  }
+if (typeof phoneMq.addEventListener === "function") {
+  phoneMq.addEventListener("change", updateHeroVideoSources);
+} else if (typeof phoneMq.addListener === "function") {
+  phoneMq.addListener(updateHeroVideoSources);
+}
+if (networkInfo && typeof networkInfo.addEventListener === "function") {
+  networkInfo.addEventListener("change", updateHeroVideoSources);
+} else if (networkInfo && typeof networkInfo.addListener === "function") {
+  networkInfo.addListener(updateHeroVideoSources);
 }
 
 const aboutSection = document.querySelector("#about");

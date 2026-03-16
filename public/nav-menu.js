@@ -2,13 +2,17 @@ const body = document.body;
 const toggle = document.querySelector(".nav-toggle");
 const nav = document.querySelector(".nav-links");
 const phoneMq = window.matchMedia("(max-width: 640px)");
+const forceBurgerMenu =
+  body?.classList.contains("blog-index-body") || body?.classList.contains("blog-post-body");
 
 if (body && toggle && nav) {
+  const isBurgerViewport = () => forceBurgerMenu || phoneMq.matches;
+
   const syncToggleVisibility = () => {
-    const isPhoneViewport = phoneMq.matches;
-    toggle.hidden = !isPhoneViewport;
-    toggle.setAttribute("aria-hidden", String(!isPhoneViewport));
-    if (isPhoneViewport) {
+    const shouldShowToggle = isBurgerViewport();
+    toggle.hidden = !shouldShowToggle;
+    toggle.setAttribute("aria-hidden", String(!shouldShowToggle));
+    if (shouldShowToggle) {
       toggle.removeAttribute("tabindex");
       return;
     }
@@ -36,7 +40,7 @@ if (body && toggle && nav) {
   toggle.addEventListener("click", (event) => {
     event.preventDefault();
     event.stopPropagation();
-    if (!phoneMq.matches) return;
+    if (!isBurgerViewport()) return;
     toggleMenu();
   });
 
@@ -62,7 +66,7 @@ if (body && toggle && nav) {
 
   const handleViewportChange = () => {
     syncToggleVisibility();
-    if (!phoneMq.matches) {
+    if (!isBurgerViewport()) {
       closeMenu();
     }
   };

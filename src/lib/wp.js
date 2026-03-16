@@ -5,12 +5,21 @@ import path from "node:path";
 
 const mediaDir = path.join(process.cwd(), "public", "wp-media");
 
-export const getWpAuthHeader = () => {
-  const wpUser = import.meta.env.WP_USER;
-  const wpPass = import.meta.env.WP_PASS;
-  if (!wpUser || !wpPass) return {};
-  const token = Buffer.from(`${wpUser}:${wpPass}`).toString("base64");
+const buildBasicAuthHeader = (user, pass) => {
+  if (!user || !pass) return {};
+  const token = Buffer.from(`${user}:${pass}`).toString("base64");
   return { Authorization: `Basic ${token}` };
+};
+
+export const getWpAuthHeader = () => {
+  const authPairs = [
+    [import.meta.env.WP_DIRECTORY_USER, import.meta.env.WP_DIRECTORY_PASS],
+    [import.meta.env.WP_BASIC_USER, import.meta.env.WP_BASIC_PASS],
+    [import.meta.env.WP_USER, import.meta.env.WP_PASS],
+  ];
+
+  const [user, pass] = authPairs.find(([authUser, authPass]) => authUser && authPass) ?? [];
+  return buildBasicAuthHeader(user, pass);
 };
 
 export const cacheFeaturedImage = async (url, id, headers = {}) => {

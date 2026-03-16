@@ -1,44 +1,38 @@
 ---
-import { cacheFeaturedImage, getWpAuthHeader } from "../../lib/wp.js";
+import GoogleTag from "../../components/GoogleTag.astro";
+import { fetchAllWpPosts } from "../../lib/wp-posts.js";
 
 export async function getStaticPaths() {
-  const postsApiBase = "https://urbanoise.com/wpheadless/wp-json/wp/v2/posts?per_page=100&_embed";
-  const headers = getWpAuthHeader();
-  const firstResponse = await fetch(`${postsApiBase}&page=1`, { headers });
-  if (!firstResponse.ok) {
-    return [];
-  }
-  const firstPage = await firstResponse.json();
-  const totalPages = Number(firstResponse.headers.get("X-WP-TotalPages") ?? "1");
-  const allPosts = Array.isArray(firstPage) ? [...firstPage] : [];
-
-  for (let page = 2; page <= totalPages; page += 1) {
-    const response = await fetch(`${postsApiBase}&page=${page}`, { headers });
-    if (!response.ok) break;
-    const data = await response.json();
-    if (Array.isArray(data)) {
-      allPosts.push(...data);
-    }
-  }
-
-  const postsWithMedia = await Promise.all(
-    allPosts.map(async (post) => {
-      const featured = post?._embedded?.["wp:featuredmedia"]?.[0];
-      const featuredUrl = featured?.source_url ?? "";
-      const localFeaturedUrl = await cacheFeaturedImage(featuredUrl, post?.id, headers);
-      return { ...post, __localFeaturedUrl: localFeaturedUrl };
-    })
-  );
-
-  return postsWithMedia
-    .filter((post) => post?.slug)
+  const posts = await fetchAllWpPosts();
+  return posts
+    .filter((post) => Boolean(post?.slug))
     .map((post) => ({
       params: { slug: post.slug },
       props: { post },
     }));
 }
 
-const stripHtml = (value) => (value ? value.replace(/<[^>]+>/g, "").trim() : "");
+const stripHtml = (value) =>
+  value
+    ? value
+        .replace(/<[^>]+>/g, " ")
+        .replace(/&nbsp;/gi, " ")
+        .replace(/&amp;/gi, "&")
+        .replace(/&#038;/g, "&")
+        .replace(/&#8217;/g, "'")
+        .replace(/&#8220;/g, '"')
+        .replace(/&#8221;/g, '"')
+        .replace(/&#8211;/g, "-")
+        .replace(/\s+/g, " ")
+        .trim()
+    : "";
+
+const sanitizePostHtml = (value) =>
+  value
+    ? value
+        .replace(/<h([1-6])([^>]*)>\s*(?:&nbsp;|\u00a0|\s|<br\s*\/?>)*<\/h\1>/gi, "")
+        .replace(/<p([^>]*)>\s*(?:&nbsp;|\u00a0|\s|<br\s*\/?>)*<\/p>/gi, "")
+    : "";
 
 const { post } = Astro.props;
 const title = stripHtml(post?.title?.rendered ?? "Untitled");
@@ -46,13 +40,15 @@ const clampText = (value, max = 160) =>
   value && value.length > max ? `${value.slice(0, max).trimEnd()}...` : value;
 const descriptionSource = stripHtml(post?.excerpt?.rendered ?? post?.content?.rendered ?? "");
 const description = clampText(descriptionSource || "Urbanoise journal article.", 160);
-const content = post?.content?.rendered ?? "";
+const content = sanitizePostHtml(post?.content?.rendered ?? "");
 const featured = post?._embedded?.["wp:featuredmedia"]?.[0];
-const featuredUrl = post?.__localFeaturedUrl || "";
-const featuredAlt = featured?.alt_text ?? title;
+const featuredUrl = post?.__localFeaturedUrl || featured?.source_url || "";
+const featuredAlt = featured?.alt_text || title;
 const siteUrl = "https://urbanoise.com";
-const canonicalUrl = new URL(`/blog/${Astro.params.slug ?? ""}`, siteUrl).href;
-const ogImage = featuredUrl || `${siteUrl}/Opengraph.jpg`;
+const canonicalUrl = post?.slug
+  ? new URL(`/blog/${post.slug}/`, siteUrl).href
+  : new URL("/blog/", siteUrl).href;
+const ogImage = featuredUrl ? new URL(featuredUrl, siteUrl).href : `${siteUrl}/Opengraph.jpg`;
 const terms = post?._embedded?.["wp:term"];
 const categories = Array.isArray(terms) && Array.isArray(terms[0])
   ? terms[0].map((term) => term?.name).filter(Boolean)
@@ -112,6 +108,7 @@ const structuredData = {
         } catch (_error) {}
       })();
     </script>
+    <GoogleTag />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -125,7 +122,7 @@ const structuredData = {
     <link rel="stylesheet" href="/styles.css" />
     <link rel="stylesheet" href="/styles-post.css" />
   </head>
-  <body class="post-body">
+  <body class="post-body blog-post-body">
     <div class="page-transition-overlay" aria-hidden="true"></div>
     <header class="site-header post-header" aria-label="Primary">
       <div class="site-brand">
@@ -147,11 +144,14 @@ const structuredData = {
       </button>
       <nav class="nav-links" id="primary-navigation">
         <a class="nav-link" href="/#video">Home</a>
+        <a class="nav-link" href="/start-a-project">Start a project</a>
+        <a class="nav-link" href="/about-us">About us</a>
         <a class="nav-link" href="mailto:info@urbanoise.com">Contact</a>
       </nav>
     </header>
     <main class="post-page">
       <article class="post-article">
+        <a class="post-back-inline" href="/blog/" aria-label="Back to blog">Back to blog</a>
         <div class="post-meta">
           {formattedDate ? <time datetime={post.date}>{formattedDate}</time> : null}
           {categories.length ? <span>{categories.join(" · ")}</span> : null}
@@ -163,9 +163,110 @@ const structuredData = {
           </figure>
         ) : null}
         <div class="post-content" set:html={content}></div>
+        <p class="post-seo-cta">
+          Planning an architectural documentary film for your studio or project?{" "}
+          <a href="/start-a-project">Start a project</a>.
+        </p>
       </article>
     </main>
     <script type="module" src="/nav-menu.js"></script>
     <script type="module" src="/page-transition.js"></script>
+    <style is:global>
+      body.blog-post-body {
+        background: #000;
+      }
+
+      .blog-post-body .post-header {
+        position: fixed;
+        top: 1.75rem;
+        left: 2.25rem;
+        right: 2.25rem;
+        padding: 0;
+        background: transparent;
+        z-index: 20;
+      }
+
+      .blog-post-body .post-page {
+        padding: clamp(7.8rem, 16vh, 9rem) clamp(1rem, 3vw, 2.25rem) 4rem;
+      }
+
+      .blog-post-body .post-article {
+        width: min(1200px, 100%);
+        background: transparent;
+        border-radius: 0;
+        box-shadow: none;
+        backdrop-filter: none;
+      }
+
+      .blog-post-body .post-hero img {
+        height: clamp(180px, 30vw, 320px);
+        object-fit: cover;
+      }
+
+      .post-back-inline {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        margin: 0 0 0.85rem;
+        padding: 0.4rem 0.56rem;
+        border: 1px solid rgba(255, 255, 255, 0.46);
+        background: transparent;
+        font-family: var(--font-head);
+        font-size: 0.67rem;
+        letter-spacing: 0.17em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.92);
+        text-decoration: none;
+      }
+
+      .post-back-inline::before {
+        content: "←";
+        font-size: 0.78rem;
+        line-height: 1;
+      }
+
+      .post-back-inline:hover,
+      .post-back-inline:focus-visible {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .post-seo-cta {
+        margin: 1.35rem 0 0;
+        font-size: clamp(0.94rem, 0.26vw + 0.88rem, 1rem);
+        line-height: 1.45;
+        color: rgba(255, 255, 255, 0.86);
+      }
+
+      .post-seo-cta a {
+        color: #fff;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 2px;
+      }
+
+      @media (max-width: 768px) {
+        .blog-post-body .post-header {
+          top: 1.25rem;
+          left: 1.5rem;
+          right: 1.5rem;
+        }
+
+        .blog-post-body .post-page {
+          padding: 6.8rem 1rem 3rem;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .blog-post-body .post-header {
+          top: 1rem;
+          left: 1rem;
+          right: 1rem;
+        }
+
+        .blog-post-body .post-hero img {
+          height: clamp(150px, 44vw, 220px);
+        }
+      }
+    </style>
   </body>
 </html>

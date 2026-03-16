@@ -18,6 +18,7 @@ const manifestoSecondary = manifesto
   : [];
 const scrollDownCta = introSection?.querySelector("[data-project-scroll-cta]");
 const sectionScrollCtas = Array.from(document.querySelectorAll("[data-section-scroll-cta]"));
+const consultationCtas = Array.from(document.querySelectorAll(".book-consultation-cta"));
 const revealSections = Array.from(document.querySelectorAll(".service-section, .footer-page"));
 const firstServiceSection = document.querySelector(".service-section");
 
@@ -43,6 +44,52 @@ let snapSettleTimeout = null;
 let architectureWordIndex = 0;
 let architectureWordTween = null;
 let architectureWordInterval = null;
+
+const trackConsultationClick = (linkElement, index, eventCallback) => {
+  const linkText = linkElement?.textContent?.trim() || "Book a consultation";
+  if (typeof window.gtag !== "function") {
+    eventCallback?.();
+    return;
+  }
+
+  window.gtag("event", "book_consultation_click", {
+    cta_text: linkText,
+    cta_index: index + 1,
+    link_url: linkElement?.href || "",
+    page_path: window.location.pathname,
+    transport_type: "beacon",
+    event_callback: eventCallback,
+    event_timeout: 900,
+  });
+};
+
+consultationCtas.forEach((cta, index) => {
+  cta.addEventListener("click", (event) => {
+    const isModifiedClick =
+      event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
+    if (isModifiedClick) {
+      trackConsultationClick(cta, index);
+      return;
+    }
+
+    const destination = cta?.href;
+    if (!destination) {
+      trackConsultationClick(cta, index);
+      return;
+    }
+
+    event.preventDefault();
+    let hasNavigated = false;
+    const navigate = () => {
+      if (hasNavigated) return;
+      hasNavigated = true;
+      window.location.href = destination;
+    };
+
+    trackConsultationClick(cta, index, navigate);
+    window.setTimeout(navigate, 900);
+  });
+});
 
 const animateWindowScroll = (targetY, durationSeconds) => {
   const startY = window.scrollY || document.documentElement.scrollTop || 0;
@@ -80,7 +127,9 @@ const isEditableTarget = (target) =>
   (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(target.tagName));
 
 const LARGE_MONITOR_QUERY = "(min-width: 2200px)";
+const COMPACT_LAYOUT_QUERY = "(max-width: 768px)";
 const isLargeMonitorViewport = () => window.matchMedia(LARGE_MONITOR_QUERY).matches;
+const isCompactLayoutViewport = () => window.matchMedia(COMPACT_LAYOUT_QUERY).matches;
 
 const getSectionTargetY = (targetSection) => {
   if (!(targetSection instanceof HTMLElement)) return null;
@@ -93,10 +142,11 @@ const getSectionTargetY = (targetSection) => {
   const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
   const headerOffset = header instanceof HTMLElement ? header.getBoundingClientRect().height + 24 : 24;
   const isLargeMonitor = isLargeMonitorViewport();
-  const topPadding = isLargeMonitor ? headerOffset + 170 : headerOffset + 10;
-  const bottomPadding = isLargeMonitor ? 34 : 18;
-  const ctaBottomViewportPadding = isLargeMonitor ? 32 : 14;
-  const maxAutoPullUp = isLargeMonitor ? 0 : 18;
+  const isCompactLayout = isCompactLayoutViewport();
+  const topPadding = isLargeMonitor ? headerOffset + 170 : isCompactLayout ? headerOffset + 62 : headerOffset + 10;
+  const bottomPadding = isLargeMonitor ? 34 : isCompactLayout ? 12 : 18;
+  const ctaBottomViewportPadding = isLargeMonitor ? 32 : isCompactLayout ? 20 : 14;
+  const maxAutoPullUp = isLargeMonitor || isCompactLayout ? 0 : 18;
 
   const sectionTitle = targetSection.querySelector(".film-title");
   const primaryCopy =

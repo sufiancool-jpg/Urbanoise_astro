@@ -1,4 +1,6 @@
 ---
+import GoogleTag from "../components/GoogleTag.astro";
+
 const siteUrl = "https://urbanoise.com";
 const pageTitle = "Start a project | Urbanoise";
 const pageDescription =
@@ -43,6 +45,7 @@ const structuredData = {
         } catch (_error) {}
       })();
     </script>
+    <GoogleTag />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -139,7 +142,7 @@ const structuredData = {
             <h2 class="film-title">FILM</h2>
 
             <div class="film-strip" aria-label="Film stills">
-              <img src="/Photos/about/1.jpg" alt="Architectural film still one" loading="lazy" decoding="async" />
+              <img src="/Photos/1.jpg" alt="Architectural film still one" loading="lazy" decoding="async" />
               <img src="/Photos/Video1.jpg" alt="Architectural film still two" loading="lazy" decoding="async" />
               <img src="/Photos/video2.jpg" alt="Architectural film still three" loading="lazy" decoding="async" />
             </div>
@@ -275,19 +278,7 @@ const structuredData = {
               <div class="footer-social" aria-label="Urbanoise social links">
                 <a
                   class="footer-social-link"
-                  href="https://www.instagram.com"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  aria-label="Instagram"
-                >
-                  <svg viewBox="0 0 24 24" role="img">
-                    <path d="M17 2H7C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5zm3 15c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3h10c1.7 0 3 1.3 3 3v10z" />
-                    <path d="M12 7.3A4.7 4.7 0 1 0 16.7 12 4.7 4.7 0 0 0 12 7.3zm0 7.6A2.9 2.9 0 1 1 14.9 12 2.9 2.9 0 0 1 12 14.9zM17.9 6.4a1.1 1.1 0 1 1-1.1-1.1 1.1 1.1 0 0 1 1.1 1.1z" />
-                  </svg>
-                </a>
-                <a
-                  class="footer-social-link"
-                  href="https://www.linkedin.com"
+                  href="https://www.linkedin.com/company/urba-noise/"
                   target="_blank"
                   rel="noreferrer noopener"
                   aria-label="LinkedIn"
@@ -298,7 +289,7 @@ const structuredData = {
                 </a>
               </div>
               <a class="footer-back" href="/#video">Back to main page</a>
-              <p class="footer-note">Urbanoise © 2025 Imprint</p>
+              <p class="footer-note">Urbanoise © 2025 <a class="footer-note-link" href="/imprint">Imprint</a> <a class="footer-note-link" href="/blog/">Blog</a></p>
             </div>
           </div>
         </section>
@@ -306,7 +297,7 @@ const structuredData = {
     </main>
     <script type="module" src="/nav-menu.js"></script>
     <script type="module" src="/page-transition.js"></script>
-    <script type="module" src="/start-project.js?v=20260302-large-screen-layout-01"></script>
+    <script type="module" src="/start-project.js?v=20260308-mobile-offset-02"></script>
     <style>
       .start-project-body {
         background: var(--pantone-8245c);
@@ -779,6 +770,15 @@ const structuredData = {
           min-height: 100dvh;
         }
 
+        .start-project-body .film-section {
+          min-height: auto;
+          padding: clamp(8.2rem, 13.5vh, 9.4rem) 0 clamp(4.1rem, 8vh, 5.3rem);
+        }
+
+        .start-project-body .film-section:not(.photo-section) {
+          padding-top: clamp(8.2rem, 13.5vh, 9.4rem);
+        }
+
         .start-project-body .manifesto-hero-title {
           top: calc(clamp(5.6rem, 26svh, calc(100svh - 11.4rem)) + 5px);
           top: calc(clamp(5.6rem, 26dvh, calc(100dvh - 11.4rem)) + 5px);
@@ -838,26 +838,26 @@ const structuredData = {
 
         .start-project-body .film-title {
           letter-spacing: 0.1em;
-          margin-bottom: 1.35rem;
-          font-size: clamp(1.38rem, 1vw + 1.05rem, 2rem);
+          margin-bottom: 1rem;
+          font-size: clamp(1.22rem, 0.82vw + 0.98rem, 1.72rem);
         }
 
         .start-project-body .film-strip img {
-          height: clamp(180px, 27vh, 260px);
+          height: clamp(170px, 24vh, 230px);
         }
 
         .start-project-body .film-copy {
           width: min(92%, 760px);
-          margin-top: clamp(2.2rem, 4.2vh, 3.2rem);
+          margin-top: clamp(1.7rem, 3.4vh, 2.4rem);
         }
 
         .start-project-body .service-copy-grid {
           width: auto;
-          margin-top: clamp(2.2rem, 4.2vh, 3.2rem);
-          padding-left: 1.6rem;
-          padding-right: 1.2rem;
+          margin-top: clamp(1.7rem, 3.4vh, 2.4rem);
+          padding-left: 1.1rem;
+          padding-right: 1rem;
           grid-template-columns: 1fr;
-          row-gap: 1rem;
+          row-gap: 0.8rem;
         }
 
         .start-project-body .service-copy-grid .film-copy,
@@ -870,7 +870,7 @@ const structuredData = {
         .start-project-body .book-consultation-cta {
           justify-self: center;
           transform: translateX(calc(-1 * var(--cta-left-shift)));
-          margin-top: 0.65rem;
+          margin-top: 0.45rem;
           font-size: 0.72rem;
           letter-spacing: 0.14em;
           padding: 0.66rem 1.04rem;
@@ -891,7 +891,7 @@ const structuredData = {
         }
 
         .start-project-body .film-copy-note {
-          margin-top: 2.35rem;
+          margin-top: 1.7rem;
         }
 
         .start-project-body .photo-section .film-copy-subhead {
@@ -902,11 +902,11 @@ const structuredData = {
 
         .start-project-body .consultation-section .film-title {
           letter-spacing: 0.16em;
-          margin-bottom: 3.15rem;
+          margin-bottom: 2.1rem;
         }
 
         .start-project-body .consultation-section .service-copy-grid {
-          margin-top: 3.2rem;
+          margin-top: 2.4rem;
         }
 
         .start-project-body .consultation-copy {
@@ -941,7 +941,7 @@ const structuredData = {
         .start-project-body .film-strip img {
           display: none;
           width: 100%;
-          height: clamp(220px, 30vh, 300px);
+          height: clamp(180px, 24vh, 240px);
         }
 
         .start-project-body .film-strip img:first-child {

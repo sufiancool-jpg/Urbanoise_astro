@@ -1,4 +1,6 @@
 ---
+import GoogleTag from "../components/GoogleTag.astro";
+
 const siteUrl = "https://urbanoise.com";
 const pageTitle = "About us | Urbanoise";
 const pageDescription =
@@ -43,6 +45,7 @@ const structuredData = {
         } catch (_error) {}
       })();
     </script>
+    <GoogleTag />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -88,7 +91,7 @@ const structuredData = {
         class="post-article"
         style="--about-column-width:min(100%,61ch);display:flex;flex-direction:column;align-items:center;gap:clamp(1rem,2vw,2.25rem);width:min(72%,1260px);margin:0 auto;padding:0;background:transparent;border-radius:0;box-shadow:none;"
       >
-        <div class="about-us-swap" data-about-swap style="inline-size:var(--about-column-width);max-inline-size:100%;margin-inline:auto;">
+        <div class="about-us-swap" data-about-swap style="max-inline-size:100%;margin-inline:auto;">
           <figure class="about-us-photo-wrap" data-about-photo style="margin:0;inline-size:100%;max-inline-size:100%;align-self:center;">
             <img
               class="about-us-photo"
@@ -98,12 +101,12 @@ const structuredData = {
               decoding="async"
             />
           </figure>
-          <p class="about-us-hover-cta" aria-hidden="true">Hover for more</p>
+          <p class="about-us-hover-cta" aria-hidden="true">More</p>
           <div class="about-us-copy" data-about-copy style="inline-size:100%;max-inline-size:100%;margin-inline:auto;text-align:left;">
             <h1 class="post-title">About Urbanoise</h1>
             <div class="post-content">
               <p>
-                URBANOISE is a production company founded in 2026 by director and cinematographer Sufian Ararah and
+                <span class="about-us-inline-logo">URBANOISE</span> is a Berlin based production company founded in 2026 by director and cinematographer Sufian Ararah and
                 photographer and architect Rokas Jankus, dedicated to architectural documentaries across film and
                 photography.
               </p>
@@ -112,7 +115,7 @@ const structuredData = {
                 and atmospheres as they unfold, allowing architecture to be understood within its real context.
               </p>
               <p>
-                URBANOISE stands for a documentary and artistic engagement with architecture and urban space. Works that
+                <span class="about-us-inline-logo">URBANOISE</span> stands for a documentary and artistic engagement with architecture and urban space. Works that
                 aim not at attention, but at understanding.
               </p>
             </div>
@@ -171,19 +174,7 @@ const structuredData = {
           <div class="footer-social" aria-label="Urbanoise social links">
             <a
               class="footer-social-link"
-              href="https://www.instagram.com"
-              target="_blank"
-              rel="noreferrer noopener"
-              aria-label="Instagram"
-            >
-              <svg viewBox="0 0 24 24" role="img">
-                <path d="M17 2H7C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5zm3 15c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3h10c1.7 0 3 1.3 3 3v10z" />
-                <path d="M12 7.3A4.7 4.7 0 1 0 16.7 12 4.7 4.7 0 0 0 12 7.3zm0 7.6A2.9 2.9 0 1 1 14.9 12 2.9 2.9 0 0 1 12 14.9zM17.9 6.4a1.1 1.1 0 1 1-1.1-1.1 1.1 1.1 0 0 1 1.1 1.1z" />
-              </svg>
-            </a>
-            <a
-              class="footer-social-link"
-              href="https://www.linkedin.com"
+              href="https://www.linkedin.com/company/urba-noise/"
               target="_blank"
               rel="noreferrer noopener"
               aria-label="LinkedIn"
@@ -194,7 +185,7 @@ const structuredData = {
             </a>
           </div>
           <a class="footer-back" href="/#video">Back to main page</a>
-          <p class="footer-note">Urbanoise © 2025 Imprint</p>
+          <p class="footer-note">Urbanoise © 2025 <a class="footer-note-link" href="/imprint">Imprint</a> <a class="footer-note-link" href="/blog/">Blog</a></p>
         </div>
       </div>
     </section>
@@ -264,15 +255,30 @@ const structuredData = {
 
       .about-us-body .about-us-swap {
         position: relative;
-        width: var(--about-column-width);
+        --about-max-width-by-height: calc((100dvh - 8rem) * 0.75);
+        --about-max-width-by-menu: max(16rem, calc(100dvw - 34rem));
+        --about-preferred-width: clamp(22rem, 40vw, 34rem);
+        --about-safe-width: min(
+          var(--about-preferred-width),
+          var(--about-column-width),
+          var(--about-max-width-by-height),
+          var(--about-max-width-by-menu)
+        );
+        width: min(100%, max(18rem, var(--about-safe-width)));
         max-width: 100%;
         overflow: hidden;
+      }
+
+      @media (max-width: 900px) {
+        .about-us-body .about-us-swap {
+          width: min(100%, var(--about-safe-width));
+        }
       }
 
       .about-us-body .about-us-hover-cta {
         position: absolute;
         right: clamp(0.6rem, 1vw, 0.9rem);
-        bottom: clamp(0.6rem, 1vw, 0.9rem);
+        top: clamp(0.6rem, 1vw, 0.9rem);
         margin: 0;
         padding: 0.28rem 0.52rem;
         font-family: var(--font-head);
@@ -291,6 +297,12 @@ const structuredData = {
       .about-us-body .about-us-swap:focus-within .about-us-hover-cta,
       .about-us-body .about-us-swap.is-revealed .about-us-hover-cta {
         opacity: 0;
+      }
+
+      .about-us-body .about-us-swap:hover .about-us-copy,
+      .about-us-body .about-us-swap:focus-within .about-us-copy,
+      .about-us-body .about-us-swap.is-revealed .about-us-copy {
+        pointer-events: auto;
       }
 
       .about-us-body .footer-page {
@@ -319,6 +331,17 @@ const structuredData = {
         text-align: left;
       }
 
+      .about-us-body .about-us-inline-logo {
+        display: inline-block;
+        font-family: var(--font-logo);
+        font-weight: 800;
+        font-size: 1.25rem;
+        letter-spacing: var(--logo-letter-spacing);
+        line-height: 1;
+        text-transform: uppercase;
+        color: #fff;
+      }
+
       .about-us-body .post-content {
         margin: 0;
         max-width: 54ch;
@@ -334,6 +357,10 @@ const structuredData = {
         text-align: left;
         hyphens: none;
         text-wrap: pretty;
+      }
+
+      .about-us-body .post-content p:last-child {
+        margin-bottom: 0;
       }
 
       .about-us-body .post-title {
